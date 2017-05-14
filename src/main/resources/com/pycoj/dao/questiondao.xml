@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pycoj.dao.QuestionDao">
+    <select id="selectQuestions" resultType="com.pycoj.entity.Question">
+        SELECT *
+        FROM `question`
+        LIMIT #{start},20
+    </select>
+    <select id="selectAmountOfQuestions" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM `question`
+    </select>
+    <select id="selectQuestionByID" resultType="com.pycoj.entity.Question">
+        SELECT *
+        FROM `question`
+        WHERE id=#{id}
+    </select>
+    <insert id="save" parameterType="com.pycoj.entity.Question" useGeneratedKeys="true" keyProperty="question.id">
+        INSERT INTO `question`
+        (`title`,`tag`,`description`,`input`,`output`,`hint`)
+        VALUES
+        (#{question.title},#{question.tag},#{question.description},#{question.input},#{question.output},#{question.hint})
+    </insert>
+    <insert id="saveSolution">
+        INSERT INTO `submit`
+        (`user_id`,`question_id`,`file_name`)
+        VALUES
+        (#{userID},#{questionID},#{name})
+    </insert>
+</mapper>
