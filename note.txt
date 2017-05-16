@@ -1,0 +1,3 @@
+发布的时候需要修改:
+com.pycoj.service.EmailHandler.java中的HOSTIP变量
+service层中上传文件的路径filePrefix
