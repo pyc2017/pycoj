@@ -4,7 +4,7 @@ import com.pycoj.entity.Question;
 import com.pycoj.entity.QuestionState;
 import com.pycoj.entity.User;
 import com.pycoj.service.EmailService;
-import com.pycoj.service.PycOJService;
+import com.pycoj.service.OJService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,7 +27,7 @@ public class IndexController {
     private static Logger logger=Logger.getLogger(IndexController.class);
     @Autowired
     @Qualifier("serviceImpl")
-    private PycOJService service;
+    private OJService service;
     @Autowired
     @Qualifier("emailService")
     private EmailService eService;

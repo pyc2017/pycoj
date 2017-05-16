@@ -1,11 +1,10 @@
-package com.pycoj.service.impl;
+package com.pycoj.service;
 
 import com.pycoj.dao.QuestionDao;
 import com.pycoj.dao.UserDao;
 import com.pycoj.entity.Question;
 import com.pycoj.entity.QuestionState;
 import com.pycoj.entity.User;
-import com.pycoj.service.PycOJService;
 import com.pycoj.util.MyUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,8 @@ import java.util.Map;
  * Created by Heyman on 2017/5/1.
  */
 @Service("serviceImpl")
-public class OJServiceImpl implements PycOJService {
-    private static final Logger log=Logger.getLogger(OJServiceImpl.class);
+public class OJService {
+    private static final Logger log=Logger.getLogger(OJService.class);
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -44,7 +43,6 @@ public class OJServiceImpl implements PycOJService {
      * @param username
      * @return
      */
-    @Override
     public boolean checkUsernameExist(String username) {
         if (userDao.selectUsernameByUsername(username)>0){
             return false;
@@ -58,7 +56,6 @@ public class OJServiceImpl implements PycOJService {
      * @param user
      * @return
      */
-    @Override
     public boolean register(User user) {
         try {
             if (userDao.selectUsernameByUsername(user.getUsername()) > 0) {
@@ -74,7 +71,6 @@ public class OJServiceImpl implements PycOJService {
         }
     }
 
-    @Override
     public boolean login(User user) {
         User result;
         if ((result=userDao.selectUserByUsernameAndPassword(user))!=null){
@@ -91,7 +87,6 @@ public class OJServiceImpl implements PycOJService {
      * @param page
      * @return
      */
-    @Override
     public List<Question> showQuestions(int page) {
         return questionDao.selectQuestions((page-1)*20);
     }
@@ -99,12 +94,10 @@ public class OJServiceImpl implements PycOJService {
     /**
      * 更新问题数量
      */
-    @Override
     public void updateQuestionState() {
         state.setAmount(questionDao.selectAmountOfQuestions());
     }
 
-    @Override
     public Question showQuestion(int id) {
         return questionDao.selectQuestionByID(id);
     }
@@ -116,7 +109,6 @@ public class OJServiceImpl implements PycOJService {
      * @param question
      * @return
      */
-    @Override
     public boolean newQuestion(Question question, HttpServletRequest request) throws IOException {
         /*****将\r\n换成<p></p>***/
         String temp;
@@ -169,7 +161,6 @@ public class OJServiceImpl implements PycOJService {
      * @param userID 提交的用户的id
      * @return
      */
-    @Override
     public String saveSolution(int id, String code, String suffix, int userID) {
         try {
             File file=new File(filePrefix+id);
@@ -207,7 +198,6 @@ public class OJServiceImpl implements PycOJService {
         }
     }
 
-    @Override
     public void runSolution(int id) {
 
     }
