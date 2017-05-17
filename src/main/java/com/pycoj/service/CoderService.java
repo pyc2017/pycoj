@@ -28,15 +28,10 @@ import java.util.Map;
 @Service("serviceImpl")
 public class OJService {
     private static final Logger log=Logger.getLogger(OJService.class);
-    @Autowired
-    private UserDao userDao;
-    @Autowired
-    private QuestionDao questionDao;
-    @Autowired
-    @Qualifier("tokenMap")
-    private Map map;
-    @Autowired
-    private QuestionState state;
+    @Autowired private UserDao userDao;
+    @Autowired private QuestionDao questionDao;
+    @Autowired @Qualifier("tokenMap") private Map map;
+    @Autowired private QuestionState state;
 
     /**
      * 注册的时候检查用户名是否重复，没有重复则返回真
