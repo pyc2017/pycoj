@@ -9,10 +9,6 @@ import org.springframework.web.context.WebApplicationContext;
  * Created by Heyman on 2017/4/30.
  */
 @Component
-@Scope(
-        value= WebApplicationContext.SCOPE_SESSION,
-        proxyMode = ScopedProxyMode.TARGET_CLASS
-)
 public class User {
     private int id;
     private String password;

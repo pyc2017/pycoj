@@ -12,8 +12,8 @@
 <jsp:include page="nav.jsp"></jsp:include>
 <div class="container">
     <div class="form">
-        <p><span>@&nbsp;</span><input name="oj_username" type="text" placeholder="您的账号" id="oj_username"/> </p>
-        <p><span>&nbsp;P&nbsp;</span><input name="oj_password" id="oj_password" type="password" placeholder="您的密码"/> </p>
+        <p><span>@&nbsp;</span><input name="username" type="text" placeholder="您的账号" id="oj_username"/> </p>
+        <p><span>&nbsp;P&nbsp;</span><input name="password" id="oj_password" type="password" placeholder="您的密码"/> </p>
         <p><input name="submit" type="submit" value="登录" id="login_submit"/> </p>
         <div id="error">
         </div>
@@ -25,8 +25,8 @@
             $.ajax({
                 url:"<%=path%>/login/",
                 data:{
-                    "oj_username": $("#oj_username").val(),
-                    "oj_password":$("#oj_password").val(),
+                    "username": $("#oj_username").val(),
+                    "password":$("#oj_password").val(),
                 },
                 type:"POST",
                 contentType:"application/x-www-form-urlencoded",

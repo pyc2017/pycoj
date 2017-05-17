@@ -3,7 +3,8 @@ package com.pycoj;
 import com.pycoj.config.RootConfig;
 import com.pycoj.entity.Question;
 import com.pycoj.service.EmailService;
-import com.pycoj.service.PycOJService;
+import com.pycoj.service.CoderService;
+import com.pycoj.service.SolutionService;
 import com.pycoj.util.MyUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,9 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -35,7 +34,7 @@ public class ServiceTest {
     @Autowired
     private EmailService service;
     @Autowired
-    private PycOJService service2;
+    private SolutionService service2;
 
     @Test
     public void emailTest(){

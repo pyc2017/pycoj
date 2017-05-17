@@ -43,6 +43,12 @@ public class EmailService {
         return true;
     }
 
+    /**
+     * 查看token是否过期
+     * @param email
+     * @param token
+     * @return token是否过期
+     */
     public boolean checkToken(String email, String token) {
         try {
             String token2;//取出来的token
