@@ -3,11 +3,13 @@ package com.pycoj.controller;
 import com.pycoj.entity.Question;
 import com.pycoj.entity.QuestionState;
 import com.pycoj.service.QuestionService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -18,6 +20,8 @@ import java.util.List;
  */
 @Controller
 public class QuestionController {
+    private static Logger log=Logger.getLogger(QuestionController.class);
+
     @Autowired private QuestionState state;
     @Autowired private Question question;
     @Autowired @Qualifier("qService") private QuestionService service;
@@ -70,28 +74,15 @@ public class QuestionController {
 
     /**
      * 执行新建题目
-     * @param title
-     * @param description
-     * @param input
-     * @param output
-     * @param hint
-     * @param request
      * @return
      * @throws IOException
      */
     @RequestMapping(value="/new/",method = RequestMethod.POST)
-    public String newQuestion(@RequestParam("title")String title,
-                              @RequestParam("description")String description,
-                              @RequestParam("input")String input,
-                              @RequestParam("output")String output,
-                              @RequestParam("hint")String hint,
-                              HttpServletRequest request) throws IOException {
-        question.setDescription(description);
-        question.setTitle(title);
-        question.setHint(hint);
-        question.setInput(input);
-        question.setOutput(output);
-        service.newQuestion(question,request);
+    public String newQuestion(Question _q,
+                              @RequestPart("inputfile") MultipartFile inputfile,
+                              @RequestPart("outputfile")MultipartFile outputfile) throws IOException {
+        log.info("{ Admin start creating question:\ntitile:"+_q.getTitle()+" description:"+_q.getDescription()+"\ninput file:"+inputfile.getOriginalFilename()+"}");
+        service.newQuestion(_q,inputfile,outputfile);
         return "index";
     }
 }
