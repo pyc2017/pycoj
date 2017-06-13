@@ -60,7 +60,7 @@ public class QuestionController {
     public String getQuestionDetail(@PathVariable int id,
                                     Model model){
         model.addAttribute("question",service.showQuestion(id));
-        return "detail";
+        return "question/detail";
     }
 
     /**
@@ -69,7 +69,7 @@ public class QuestionController {
      */
     @RequestMapping(value="/new/",method = RequestMethod.GET)
     public String newQuestion(){
-        return "newquestion";
+        return "question/new";
     }
 
     /**

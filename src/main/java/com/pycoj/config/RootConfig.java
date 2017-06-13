@@ -13,9 +13,12 @@ import org.springframework.jms.listener.adapter.MessageListenerAdapter;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -137,5 +140,10 @@ public class RootConfig {
     @Bean("tokenMap")
     public ConcurrentHashMap<String,String> tokenMap(){
         return new ConcurrentHashMap<String,String>();//<email,token>
+    }
+
+    @Bean
+    public MultipartResolver multipartResolver() throws IOException{
+        return new StandardServletMultipartResolver();
     }
 }

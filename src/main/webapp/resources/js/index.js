@@ -1,8 +1,5 @@
 $(document).ready(function () {
     updateQuestion(1);
-    $("#pagenumbers div a").click(function () {
-        alert($(this).val());
-    })
 })
 function updateQuestion(page) {
     /*****************questions*****************/
@@ -13,21 +10,15 @@ function updateQuestion(page) {
         },
         type:"get",
         success:function (data) {
-            $("#questions ul").empty();
-            var s1="<li>"+
-                "<div class=\"question\">"+
-                "<div class=\"question-a\">"+
-                "<a href=\"";
-            var s2="\">";
-            var s3="</a>"+
-                "</div>"+
-                "<div class=\"question-submit\">";
-            var s4="</div>"+
-                "</div>"+
-                "</li>";
+            $(".table tbody").empty();
+            var s1="<tr><th scope=\"row\">";
+            var s2="</th><td><a href=\"/question_detail/";
+            var s3="\">";
+            var s4="</a></td><td>";
+            var s5="</td></tr>";
             for (var i=0;i<data.length;i++){
-                var s=s1+"/question_detail/"+data[i]["id"]+s2+data[i]["title"]+s3+data[i]["submit"]+s4;
-                $("#questions ul").append(s);
+                var s=s1+data[i]["id"]+s2+data[i]["id"]+s3+data[i]["title"]+s4+data[i]["submit"]+s5;
+                $(".table tbody").append(s);
             }
         }
     })
@@ -36,22 +27,21 @@ function updateQuestion(page) {
         url:"/getpageamount/",
         type:"get",
         success:function (data) {
-            $("#pagenumbers div").empty();
-            if (page>1) {
-                $("#pagenumbers div").append("<a onclick=\"updateQuestion(" + (page - 1) + ")\" href=\"javascript:void(0)\" class=\"pagenumbers_left\">&lt;&lt;前一页</a>");
-            }
+            $(".pagination").empty();
             var i=1;
             for (;i<=data/20+(data%20>0);i++){
-                var s="<a onclick=\"updateQuestion("+i+")\" href=\"javascript:void(0)\"";
+                var s="<li";
                 if (i==page){
-                    s+=" class=\"pagenumbers_now\"";
+                    s+=" class=\"active\"";
                 }
-                s+=">";
+                s+="><a onclick=\"updateQuestion("+i+")\" href=\"javascript:void(0)\">";
                 s+=i;
-                s+="</a>";
-                $("#pagenumbers div").append(s);
+                if (i==page){
+                    s+=" <span class=\"sr-only\">(current)</span>";
+                }
+                s+="</a></li>";
+                $(".pagination").append(s);
             }
-            $("#pagenumbers div").append("<a onclick=\"updateQuestion("+(page+1)+")\" href=\"javascript:void(0)\" class=\"pagenumbers_right\">后一页&gt;&gt;</a>");
         }
     })
 }

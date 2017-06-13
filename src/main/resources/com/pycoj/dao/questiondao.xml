@@ -22,10 +22,4 @@
         VALUES
         (#{question.title},#{question.tag},#{question.description},#{question.input},#{question.output},#{question.hint})
     </insert>
-    <insert id="saveSolution">
-        INSERT INTO `submit`
-        (`user_id`,`question_id`,`file_name`)
-        VALUES
-        (#{userID},#{questionID},#{name})
-    </insert>
 </mapper>

@@ -32,6 +32,4 @@ public interface QuestionDao {
     public int selectAmountOfQuestions();
 
     public Question selectQuestionByID(@Param("id")int id);
-
-    public boolean saveSolution(@Param("userID")int userID,@Param("questionID")int questionID,@Param("name")String name);
 }

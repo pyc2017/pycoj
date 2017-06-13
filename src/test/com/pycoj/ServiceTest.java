@@ -3,8 +3,8 @@ package com.pycoj;
 import com.pycoj.config.RootConfig;
 import com.pycoj.entity.Question;
 import com.pycoj.service.EmailService;
-import com.pycoj.service.CoderService;
 import com.pycoj.service.SolutionService;
+import com.pycoj.service.abstracts.JavaProgram;
 import com.pycoj.util.MyUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,9 +76,9 @@ public class ServiceTest {
         q.setOutput("heihei");
     }
 
+
     @Test
-    public void saveSolutionTest() throws IOException {
-        String code=new String("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab");
-        System.out.println(service2.saveSolution(1,code,".cpp",2));
+    public void runSolutionTest() throws Exception {
+        service2.runSolution(1,"5BN_Au3ionZ9b16pqsgAhZEQGuk9tAE3",new JavaProgram());
     }
 }

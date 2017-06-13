@@ -15,6 +15,7 @@ public class Question {
     private String input;
     private String output;
     private String hint;
+    private boolean accessable;
 
     public String getInput() {
         return input;
@@ -78,5 +79,13 @@ public class Question {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isAccessable() {
+        return accessable;
+    }
+
+    public void setAccessable(boolean accessable) {
+        this.accessable = accessable;
     }
 }

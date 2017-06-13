@@ -5,19 +5,31 @@
 <html>
 <head>
     <script src="<%=path%>/resources/js/jquery-2.0.0.min.js"></script>
+    <jsp:include page="boostrap.jsp"></jsp:include>
     <link href="<%=path%>/resources/css/index.css" rel="stylesheet" type="text/css">
-    <title>邮箱注册</title>
+    <title>登录</title>
 </head>
 <body>
 <jsp:include page="nav.jsp"></jsp:include>
-<div class="container">
-    <div class="form">
-        <p><span>@&nbsp;</span><input name="username" type="text" placeholder="您的账号" id="oj_username"/> </p>
-        <p><span>&nbsp;P&nbsp;</span><input name="password" id="oj_password" type="password" placeholder="您的密码"/> </p>
-        <p><input name="submit" type="submit" value="登录" id="login_submit"/> </p>
-        <div id="error">
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="container col-md-8 form-horizontal">
+        <div class="form">
+            <div class="form-group">
+                <label for="oj_username" class="col-sm-2 control-label">Account</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="oj_username" placeholder="您的账号">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="oj_password" class="col-sm-2 control-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="oj_password" placeholder="Password">
+                </div>
+            </div>
         </div>
     </div>
+    <div class="col-md-2"></div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -26,7 +38,7 @@
                 url:"<%=path%>/login/",
                 data:{
                     "username": $("#oj_username").val(),
-                    "password":$("#oj_password").val(),
+                    "password":$("#oj_password").val()
                 },
                 type:"POST",
                 contentType:"application/x-www-form-urlencoded",

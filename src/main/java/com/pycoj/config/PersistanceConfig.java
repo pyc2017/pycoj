@@ -55,4 +55,22 @@ public class PersistanceConfig {
     public DataSourceTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
+
+    /**
+     *
+     * @return 存储用户上传的代码的文件夹
+     */
+    @Bean("filePrefix")
+    public String filePrefix(){
+        return properties().getProperty("question");
+    }
+
+    /**
+     * 题目的输入输出用例所在的文件夹，使用时还需要添加题目的id才能到达特定题目的输入输出用例所在的文件夹
+     * @return
+     */
+    @Bean("inAndOut")
+    public String inAndOut(){
+        return properties().getProperty("submit");
+    }
 }
