@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface CoderDao {
     public int selectUsernameByUsername(@Param("username")String username);
     public boolean save(@Param("coder") Coder coder);
-    public Coder selectUserByUsernameAndPassword(@Param("coder") Coder coder);
+    public Coder selectCoderByUsernameAndPassword(@Param("coder") Coder coder);
 }

@@ -60,8 +60,9 @@
                     <div class="form-group">
                         <label for="lang">编译器</label>
                         <select class="form-control" id="lang">
-                            <option value="0">gcc++</option>
+                            <option value="0">gcc</option>
                             <option value="1">JDK1.8</option>
+                            <option value="2">g++</option>
                         </select>
                     </div>
                 </div>

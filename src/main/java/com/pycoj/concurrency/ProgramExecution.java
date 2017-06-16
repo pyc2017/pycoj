@@ -5,6 +5,7 @@ import com.pycoj.entity.State;
 import com.pycoj.entity.Submit;
 import com.pycoj.service.abstracts.Program;
 
+import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -46,7 +47,7 @@ public class ProgramExecution implements Runnable {
         try {
             while (compilationTaskCount.get()>100){}
             compilationTaskCount.getAndIncrement();
-            State compileResult=program.compile(codeDirPrefix+id+"/"+codeDir);//prefix / id / dir
+            State compileResult=program.compile(new File(codeDirPrefix+id+"/"+codeDir));//prefix / id / dir
             compilationTaskCount.getAndDecrement();
             //设置完成信息
             Submit submitInfo=new Submit();

@@ -53,7 +53,7 @@ public class CoderService {
 
     public boolean login(Coder coder) {
         Coder result;
-        if ((result= coderDao.selectUserByUsernameAndPassword(coder))!=null){
+        if ((result= coderDao.selectCoderByUsernameAndPassword(coder))!=null){
             coder.setEmail(result.getEmail());
             coder.setId(result.getId());
             return true;

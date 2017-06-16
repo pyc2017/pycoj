@@ -35,7 +35,7 @@ public class SolutionController {
                                    @PathVariable int id,
                                    HttpSession session) throws Exception {
         Coder coder=(Coder) session.getAttribute("coder");
-        if (code==null){//需要重新返回
+        if (coder==null){//需要重新返回
             return false;
         }
         /*存储文件*/

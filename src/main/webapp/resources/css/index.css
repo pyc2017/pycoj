@@ -26,8 +26,8 @@ select{
 }
 .navbar-default{
     background-image: linear-gradient(to bottom, #ff9462 0, rgba(255, 148, 98, 1.0) 100%);
-    font-family: 'Open Sans',Helvetica,Arial,Lucida,sans-serif;
-    font-weight: bold;
+    font-family: -apple-system,SF UI Text,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,sans-serif;
+    font-weight: lighter;
     font-size: 19px;
 }
 .navbar-default .navbar-nav > li > a {

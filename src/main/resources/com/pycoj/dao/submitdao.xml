@@ -4,8 +4,8 @@
 <mapper namespace="com.pycoj.dao.SubmitDao">
     <insert id="saveSubmit" parameterType="com.pycoj.entity.Submit" useGeneratedKeys="true" keyProperty="submit.id">
         INSERT INTO `submit`
-        (`user_id`,`question_id`,`dir`)
-        VALUES(#{submit.userId},#{submit.questionId},#{submit.dir})
+        (`coder_id`,`question_id`,`dir`)
+        VALUES(#{submit.coderId},#{submit.questionId},#{submit.dir})
     </insert>
     <insert id="saveState">
         INSERT INTO `state` (`submit_id`,`time_cost`,`memory_cost`,`state`,`info`)

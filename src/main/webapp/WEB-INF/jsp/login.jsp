@@ -27,6 +27,7 @@
                     <input type="password" class="form-control" id="oj_password" placeholder="Password">
                 </div>
             </div>
+            <button class="btn btn-info" type="button" id="login_submit">Login</button>
         </div>
     </div>
     <div class="col-md-2"></div>
