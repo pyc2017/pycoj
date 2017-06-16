@@ -10,9 +10,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<%=path%>/index/">
-                <img src="<%=path%>/resources/img/logo.jpg"/>
-            </a>
+            <a class="navbar-brand" href="<%=path%>/index/">OJ</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -32,12 +30,6 @@
                     </ul>
                 </li>
             </ul>
-            <form class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/register_email/">注册</a></li>
                 <li><a href="/login/">登陆</a></li>
