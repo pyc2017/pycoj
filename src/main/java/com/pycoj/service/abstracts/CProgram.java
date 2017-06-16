@@ -12,7 +12,7 @@ public class CProgram extends AbstractProgram {
     }
 
     @Override
-    public State run(String codeDir,String questionDir,int id) {
+    public State[] run(String codeDir,String questionDir,int id) {
         return null;
     }
 

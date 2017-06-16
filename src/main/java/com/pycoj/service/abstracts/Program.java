@@ -27,7 +27,7 @@ public interface Program {
      * @return
      * @throws Exception
      */
-    public State run(String codeDir,String questionDir,int id) throws Exception;
+    public State[] run(String codeDir,String questionDir,int id) throws Exception;
 
     /**
      * 程序源代码的名字，java为Main.java，c为main.c，cpp为main.cpp
@@ -40,12 +40,12 @@ public interface Program {
      * @param inputFileDir 输入用例所在路径
      * @return
      */
-    public InputStream getInput(String inputFileDir) throws FileNotFoundException;
+    public InputStream[] getInput(String inputFileDir) throws FileNotFoundException;
 
     /**
      * 获取题目对应的输出用例的输入流
      * @param outputFileDir 输出用例所在路径
      * @return
      */
-    public InputStream getOutput(String outputFileDir) throws FileNotFoundException;
+    public InputStream[] getOutput(String outputFileDir) throws FileNotFoundException;
 }

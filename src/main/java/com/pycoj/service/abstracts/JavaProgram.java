@@ -1,5 +1,6 @@
 package com.pycoj.service.abstracts;
 
+import com.pycoj.concurrency.ErrStreamReader;
 import com.pycoj.entity.State;
 import org.apache.log4j.Logger;
 
@@ -12,6 +13,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Heyman on 2017/5/17.
@@ -19,7 +21,6 @@ import java.util.Arrays;
 public class JavaProgram extends AbstractProgram {
     private static Logger log=Logger.getLogger(JavaProgram.class);
     private static Runtime runtime=Runtime.getRuntime();
-    private static final String _CMD="java Main";
     private static JavaCompiler compiler= ToolProvider.getSystemJavaCompiler();
 
     /**
@@ -48,9 +49,9 @@ public class JavaProgram extends AbstractProgram {
                 sb.append("\r\n");
             }
             //编译错误
-            return new State(1,sb.toString());
+            return new State(0,0,0,1,sb.toString());
         }
-        return new State(0,"");
+        return new State(0,0,0,0,"");//submitId t m state info
     }
 
     /**
@@ -58,35 +59,54 @@ public class JavaProgram extends AbstractProgram {
      * @param codeDir 字节码文件路径
      */
     @Override
-    public State run(String codeDir,String questionDir,int id) throws Exception{
-        InputStream inputFileStream=getInput(questionDir+id);
-        InputStream outputFileStream=getOutput(questionDir+id);
-        byte[] input=new byte[1024];//存储输入用例的缓冲区
-        byte[] output=new byte[1024];//存储输出用例的缓冲区
-        byte[] outputOfChild=new byte[1024];//存储子进程输出的缓冲区
+    public State[] run(String codeDir,String questionDir,int id) throws Exception{
+        InputStream[] inputFileStream=getInput(questionDir+id);
+        InputStream[] outputFileStream=getOutput(questionDir+id);
+        State[] resultStates=new State[inputFileStream.length];
 
         //开始执行子进程
-        Process child=runtime.exec(_CMD);
-        BufferedOutputStream inputForChildProcess= (BufferedOutputStream) child.getOutputStream();
-        int len=-1;
-        while ((len=inputFileStream.read(input))!=-1){//读取至文件末尾
-            //向子程序输入
-            inputForChildProcess.write(input);
-        }
-        child.waitFor();//等待子进程完成
-
-        //获取子进程的输出，并与输出用例做对比
-        BufferedInputStream outputOfChildProcess= (BufferedInputStream) child.getInputStream();
-        while ((len=outputFileStream.read(output))!=-1){
-            String standard,result;
-            standard=new String(output);
-            outputOfChildProcess.read(outputOfChild);
-            result=new String(outputOfChild);
-            if (standard.equals(result)){
-                return new State(4,"");
+        int len=-1,len2=-1;
+        for (int i=0;i<inputFileStream.length;i++) {
+            Process child=runtime.exec("cmd /c java -cp "+codeDir+" Main");
+            BufferedOutputStream inputForChildProcess= (BufferedOutputStream) child.getOutputStream();
+            BufferedInputStream outputOfChildProcess = (BufferedInputStream) child.getInputStream();
+            Thread errThread=new Thread(new ErrStreamReader(child.getErrorStream()));
+            errThread.start();
+            while ((len = inputFileStream[i].read()) != -1) {//读取至文件末尾
+                //向子程序输入
+                inputForChildProcess.write((byte)len);
+                inputForChildProcess.flush();
             }
+            inputFileStream[i].close();
+            long start = System.currentTimeMillis();
+            boolean exit=child.waitFor(1, TimeUnit.SECONDS);//等待子进程完成
+            long tCost=System.currentTimeMillis() - start;
+            if (!exit){
+                resultStates[i]=new State(0,(int)tCost,0,2,"TLE");
+                continue;
+            }
+            inputForChildProcess.close();
+            //获取子进程的输出，并与输出用例做对比
+            while ((len = outputFileStream[i].read()) != -1) {
+                len2=outputOfChildProcess.read();
+            //    System.out.print(len);System.out.print(" ");System.out.println(len2);
+                if (len!=len2) {
+                    resultStates[i]=new State(0,(int)tCost,0,4,"wrong answer");//wa
+                    break;
+                }
+            }
+            //确保标准输出用例与程序输出同时读完才能正确
+            if ((len2=outputOfChildProcess.read())!=-1){
+                resultStates[i]=new State(0,(int)tCost,0,4,"wrong answer");//wa
+            }
+            if (resultStates[i]==null){
+                resultStates[i]=new State(0,(int)tCost,0,0,"accepted");
+            }
+            child.destroy();
+            outputOfChildProcess.close();
+            errThread.interrupt();
         }
-        return new State(0,"");
+        return resultStates;
     }
 
     @Override

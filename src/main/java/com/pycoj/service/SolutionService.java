@@ -1,5 +1,6 @@
 package com.pycoj.service;
 
+import com.pycoj.concurrency.ProgramExecution;
 import com.pycoj.dao.QuestionDao;
 import com.pycoj.dao.SubmitDao;
 import com.pycoj.entity.State;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,8 +27,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service("sService")
 public class SolutionService {
     private static final Logger log=Logger.getLogger(SolutionService.class);
-    private static final AtomicInteger compilationTaskCount=new AtomicInteger(0);
-    private static final AtomicInteger solutionTaskCount=new AtomicInteger(0);
 
     /**
      * 上传文件路径
@@ -76,33 +76,15 @@ public class SolutionService {
     }
 
     /**
-     * 运行程序，并且将信息保存到数据库中
+     * 在子线程中新建子进程运行程序
      * @param id 题目id
-     * @param dirName 路径名字
+     * @param dirName 局部路径名字
      * @param program 程序类型
      */
-    public Submit runSolution(int id, String dirName, Program program) throws Exception {
-        while (compilationTaskCount.get()>100){
-            log.info("当前正在编译的程序的数量为："+compilationTaskCount.get());
-        }
-        compilationTaskCount.getAndIncrement();
-        State compileResult=program.compile(filePrefix+id+"/"+dirName);
-        compilationTaskCount.getAndDecrement();
-        //设置完成信息
-        Submit submitInfo=new Submit();
-        submitInfo.setDir(dirName);
-        submitInfo.setQuestionId(id);
-        if (compileResult.getState()==0) {
-            while (solutionTaskCount.get()>100){
-                log.info("当前正在运行的程序的数量为:"+solutionTaskCount.get());
-            }
-            solutionTaskCount.getAndIncrement();
-            submitInfo.setState(program.run(filePrefix+id+"/"+dirName,questionDir,id));
-            solutionTaskCount.getAndDecrement();
-        }else{
-            submitInfo.setState(compileResult);
-        }
-        submitDao.save(submitInfo);
-        return submitInfo;
+    public void runSolution(int id, String dirName, Program program,int userId) throws Exception {
+        Thread t=new Thread(
+                new ProgramExecution(filePrefix,dirName,questionDir,id,program,submitDao,userId)
+        );
+        t.start();
     }
 }
