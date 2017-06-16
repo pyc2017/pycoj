@@ -2,6 +2,7 @@ package com.pycoj.service.abstracts;
 
 import com.pycoj.entity.State;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +18,7 @@ public interface Program {
      * @return
      * @throws IOException
      */
-    public State compile(String codeDir) throws IOException;
+    public State compile(File codeDir) throws IOException;
 
     /**
      *
@@ -34,6 +35,8 @@ public interface Program {
      * @return
      */
     public String getFileName();
+
+    public String getExecutionCommand(String codeDir);
 
     /**
      * 获取题目的对应输入用例的输入流
