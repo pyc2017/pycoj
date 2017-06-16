@@ -11,7 +11,13 @@
 <body>
 <jsp:include page="../nav.jsp"></jsp:include>
 <div class="row">
-    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div id="example_zip_file">
+            <h3>An Example of The Zip File</h3>
+            <p>After the compression,there should not be any folders in the zip file.</p>
+            <img src="<%=path%>/resources/img/example.png">
+        </div>
+    </div>
     <div class="container col-md-6">
         <div id="question" style="border: none;">
             <form class="form" action="<%=path%>/new/" method="post" enctype="multipart/form-data">
@@ -36,13 +42,8 @@
                     <textarea type="text" class="form-control" name="hint" id="hint"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="inputfile">Input File</label>
-                    <input type="file" id="inputfile" name="inputfile">
-                    <p class="help-block">Example block-level help text here.</p>
-                </div>
-                <div class="form-group">
-                    <label for="outputfile">Output File</label>
-                    <input type="file" id="outputfile" name="outputfile">
+                    <label for="zip">Zip File</label>
+                    <input type="file" id="zip" name="zip">
                     <p class="help-block">Example block-level help text here.</p>
                 </div>
                 <input type="hidden" name="accessable" value="true">

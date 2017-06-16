@@ -92,7 +92,7 @@
                     $("#result").empty();
                     switch (data["state"]){
                         case 0:
-                            $("#result").append("<div class=\"alert alert-success\" role=\"alert\"><p>编译错误</p></div>");
+                            $("#result").append("<div class=\"alert alert-success\" role=\"alert\"><p>Accepted</p></div>");
                             break;
                         case 1:
                             $("#result").append("<div class=\"alert alert-danger\" role=\"alert\"><p>编译错误</p></div>");

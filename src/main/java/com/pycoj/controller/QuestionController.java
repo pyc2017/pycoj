@@ -79,10 +79,9 @@ public class QuestionController {
      */
     @RequestMapping(value="/new/",method = RequestMethod.POST)
     public String newQuestion(Question _q,
-                              @RequestPart("inputfile") MultipartFile inputfile,
-                              @RequestPart("outputfile")MultipartFile outputfile) throws IOException {
-        log.info("{ Admin start creating question:\ntitile:"+_q.getTitle()+" description:"+_q.getDescription()+"\ninput file:"+inputfile.getOriginalFilename()+"}");
-        service.newQuestion(_q,inputfile,outputfile);
+                              @RequestPart("zip") MultipartFile zip) throws IOException {
+        log.info("{ Admin start creating question:\ntitile:"+_q.getTitle()+" description:"+_q.getDescription()+"\ninput file:"+zip.getOriginalFilename()+"}");
+        service.newQuestion(_q,zip);
         return "index";
     }
 }
