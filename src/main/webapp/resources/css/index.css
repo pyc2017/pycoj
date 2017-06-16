@@ -2,9 +2,6 @@
     width: 45px;
     height: 28px;
 }
-.navbar-nav li a:hover{
-    text-decoration: underline;
-}
 input,button,a {
     outline:0 none !important; blr:expression(this.onFocus=this.blur());
 }
@@ -26,4 +23,20 @@ textarea{
 }
 select{
     width: 50%;
+}
+.navbar-default{
+    background-image: linear-gradient(to bottom, #ff9462 0, rgba(255, 148, 98, 1.0) 100%);
+    font-family: 'Open Sans',Helvetica,Arial,Lucida,sans-serif;
+    font-weight: bold;
+    font-size: 19px;
+}
+.navbar-default .navbar-nav > li > a {
+    color: #ffffff;
+}
+.navbar-default .navbar-brand{
+    color: #ffffff;
+    font-size: 24px;
+}
+#example_zip_file{
+    padding-left: 8px;
 }
