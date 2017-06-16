@@ -1,22 +1,12 @@
 package com.pycoj.service;
 
-import com.pycoj.dao.QuestionDao;
-import com.pycoj.dao.UserDao;
-import com.pycoj.entity.Question;
-import com.pycoj.entity.QuestionState;
-import com.pycoj.entity.User;
+import com.pycoj.dao.CoderDao;
+import com.pycoj.entity.Coder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +15,7 @@ import java.util.Map;
 @Service("coderService")
 public class CoderService {
     private static final Logger log=Logger.getLogger(CoderService.class);
-    @Autowired private UserDao userDao;
+    @Autowired private CoderDao coderDao;
     @Autowired @Qualifier("tokenMap") private Map map;
 
     /**
@@ -34,7 +24,7 @@ public class CoderService {
      * @return
      */
     public boolean checkUsernameExist(String username) {
-        if (userDao.selectUsernameByUsername(username)>0){
+        if (coderDao.selectUsernameByUsername(username)>0){
             return false;
         }else{
             return true;
@@ -43,17 +33,17 @@ public class CoderService {
 
     /**
      * 注册业务
-     * @param user
+     * @param coder
      * @return
      */
-    public boolean register(User user) {
+    public boolean register(Coder coder) {
         try {
-            if (userDao.selectUsernameByUsername(user.getUsername()) > 0) {
+            if (coderDao.selectUsernameByUsername(coder.getUsername()) > 0) {
                 //再次检测
                 return false;
             } else {
-                userDao.save(user);
-                map.remove(user.getEmail());//移除token
+                coderDao.save(coder);
+                map.remove(coder.getEmail());//移除token
                 return true;
             }
         }catch (Exception e){
@@ -61,11 +51,11 @@ public class CoderService {
         }
     }
 
-    public boolean login(User user) {
-        User result;
-        if ((result=userDao.selectUserByUsernameAndPassword(user))!=null){
-            user.setEmail(result.getEmail());
-            user.setId(result.getId());
+    public boolean login(Coder coder) {
+        Coder result;
+        if ((result= coderDao.selectUserByUsernameAndPassword(coder))!=null){
+            coder.setEmail(result.getEmail());
+            coder.setId(result.getId());
             return true;
         }else {
             return false;

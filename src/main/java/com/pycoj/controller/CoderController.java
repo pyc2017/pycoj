@@ -1,6 +1,6 @@
 package com.pycoj.controller;
 
-import com.pycoj.entity.User;
+import com.pycoj.entity.Coder;
 import com.pycoj.service.EmailService;
 import com.pycoj.service.CoderService;
 import org.apache.log4j.Logger;
@@ -86,12 +86,12 @@ public class CoderController {
     @RequestMapping(value="/register/",method=RequestMethod.POST)
     @ResponseBody
     public String doRegister(
-            User user,
+            Coder coder,
             HttpServletRequest request){
-        if (service.register(user)){
+        if (service.register(coder)){
             //成功并设置session
             HttpSession session=request.getSession();
-            session.setAttribute("user",user);
+            session.setAttribute("coder", coder);
             return "success";
         }else{
             return "fail";
@@ -114,11 +114,11 @@ public class CoderController {
     @RequestMapping(value="/login/",method = RequestMethod.POST)
     @ResponseBody
     public String doLogin(
-            User user,
+            Coder coder,
             HttpServletRequest request){
         HttpSession session=request.getSession();
-        if (service.login(user)){
-            session.setAttribute("user",user);
+        if (service.login(coder)){
+            session.setAttribute("coder", coder);
             return "success";
         }else{
             return "fail";
