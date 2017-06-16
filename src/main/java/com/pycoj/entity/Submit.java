@@ -6,19 +6,17 @@ package com.pycoj.entity;
  */
 public class Submit {
     private int id;
-    private int tCost;//完成时间
-    private int mCost;//消耗内存
-    private int userId;//此次提交的用户的id
+    private int coderId;//此次提交的用户的id
     private int questionId;//对应题目ID
-    private State state;
+    private State[] states;
     private String dir;
 
-    public State getState() {
-        return state;
+    public State[] getStates() {
+        return states;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setStates(State[] states) {
+        this.states = states;
     }
 
     public int getId() {
@@ -29,28 +27,12 @@ public class Submit {
         this.id = id;
     }
 
-    public int gettCost() {
-        return tCost;
+    public int getCoderId() {
+        return coderId;
     }
 
-    public void settCost(int tCost) {
-        this.tCost = tCost;
-    }
-
-    public int getmCost() {
-        return mCost;
-    }
-
-    public void setmCost(int mCost) {
-        this.mCost = mCost;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setCoderId(int coderId) {
+        this.coderId = coderId;
     }
 
     public int getQuestionId() {

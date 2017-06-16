@@ -1,16 +1,13 @@
 package com.pycoj;
 
 import com.pycoj.dao.QuestionDao;
-import com.pycoj.dao.UserDao;
+import com.pycoj.dao.CoderDao;
 import com.pycoj.entity.Question;
-import com.pycoj.entity.User;
-import org.apache.log4j.Logger;
-import org.junit.Before;
+import com.pycoj.entity.Coder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -27,7 +24,7 @@ import java.util.Properties;
 @ContextConfiguration(classes = {com.pycoj.config.PersistanceConfig.class})
 public class DaoTest {
     @Autowired
-    private UserDao userDao;
+    private CoderDao coderDao;
     @Autowired
     private QuestionDao questionDao;
     @Autowired
@@ -36,16 +33,16 @@ public class DaoTest {
 
     @Test
     public void checkUsernameExistTest(){
-        System.out.println(userDao.selectUsernameByUsername("hehehehahdhasf"));
+        System.out.println(coderDao.selectUsernameByUsername("hehehehahdhasf"));
     }
 
     @Test
     public void saveUserTest(){
-        User user=new User();
-        user.setUsername("pyc_657996510");
-        user.setPassword("chicago01");
-        user.setEmail("losangels03@163.com");
-        System.out.println(userDao.save(user));
+        Coder coder =new Coder();
+        coder.setUsername("pyc_657996510");
+        coder.setPassword("chicago01");
+        coder.setEmail("losangels03@163.com");
+        System.out.println(coderDao.save(coder));
     }
 
     @Test

@@ -14,11 +14,5 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class})
 public class EntityTest {
-    @Autowired
-    private QuestionState state;
 
-    @Test
-    public void questionStateTest(){
-        System.out.println(state.getAmount());
-    }
 }

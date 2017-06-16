@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SubmitDao {
-    public boolean save(@Param("submit")Submit submit);
+    public boolean saveSubmit(@Param("submit")Submit submit);
+    public boolean saveState(@Param("submit")Submit submit);
 }

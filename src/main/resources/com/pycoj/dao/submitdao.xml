@@ -2,9 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pycoj.dao.SubmitDao">
-    <insert id="save">
+    <insert id="saveSubmit" parameterType="com.pycoj.entity.Submit" useGeneratedKeys="true" keyProperty="submit.id">
         INSERT INTO `submit`
-        (`user_id`,`question_id`,`state`,`m_cost`,`t_cost`,`dir`)
-        VALUES(#{submit.userId},#{submit.questionId},#{submit.state.state},#{submit.mCost},#{submit.tCost},#{submit.dir})
+        (`user_id`,`question_id`,`dir`)
+        VALUES(#{submit.userId},#{submit.questionId},#{submit.dir})
+    </insert>
+    <insert id="saveState">
+        INSERT INTO `state` (`submit_id`,`time_cost`,`memory_cost`,`state`,`info`)
+        VALUES 
+        <foreach collection="submit.states" item="state" index="index" separator=",">
+            (#{submit.id},#{state.timeCost},#{state.memoryCost},#{state.state},#{state.info})
+        </foreach>
     </insert>
 </mapper>

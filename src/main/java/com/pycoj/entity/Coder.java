@@ -9,7 +9,7 @@ import org.springframework.web.context.WebApplicationContext;
  * Created by Heyman on 2017/4/30.
  */
 @Component
-public class User {
+public class Coder {
     private int id;
     private String password;
     private String email;
