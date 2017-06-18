@@ -14,4 +14,13 @@
             (#{submit.id},#{state.timeCost},#{state.memoryCost},#{state.state},#{state.info})
         </foreach>
     </insert>
+    <select id="selectStatesByCoderIdAndQuestionId" resultType="com.pycoj.entity.State">
+        SELECT *
+        FROM `state`
+        WHERE `submit_id` = (
+          SELECT MAX(`id`)
+          FROM `submit`
+          WHERE `coder_id`=#{coderId} AND `question_id`=#{questionId}
+        )
+    </select>
 </mapper>

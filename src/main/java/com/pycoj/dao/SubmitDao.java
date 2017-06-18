@@ -1,5 +1,6 @@
 package com.pycoj.dao;
 
+import com.pycoj.entity.State;
 import com.pycoj.entity.Submit;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -11,4 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface SubmitDao {
     public boolean saveSubmit(@Param("submit")Submit submit);
     public boolean saveState(@Param("submit")Submit submit);
+    public State[] selectStatesByCoderIdAndQuestionId(@Param("coderId")int coderId,
+                                                      @Param("questionId")int questionId);
 }
