@@ -4,6 +4,7 @@ import com.pycoj.dao.SubmitDao;
 import com.pycoj.entity.State;
 import com.pycoj.entity.Submit;
 import com.pycoj.service.abstracts.Program;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by Heyman on 2017/6/14.
  */
 public class ProgramExecution implements Runnable {
+    private static Logger log= Logger.getLogger(ProgramExecution.class);
     private String codeDirPrefix;
     private String codeDir;
     private String questionDir;
@@ -56,6 +58,7 @@ public class ProgramExecution implements Runnable {
             //设置用户信息
             submitInfo.setCoderId(coderId);
             submitDao.saveSubmit(submitInfo);
+            log.info("save submit");
             if (compileResult.getState()==0) {//编译成功
                 while (solutionTaskCount.get()>100){
                 }
@@ -66,6 +69,7 @@ public class ProgramExecution implements Runnable {
                 submitInfo.setStates(new State[]{compileResult});
             }
             submitDao.saveState(submitInfo);
+            log.info("save state");
         } catch (Exception e) {
             e.printStackTrace();
         }

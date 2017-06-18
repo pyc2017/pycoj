@@ -2,6 +2,7 @@ package com.pycoj.service.abstracts;
 
 import com.pycoj.concurrency.ErrStreamReader;
 import com.pycoj.entity.State;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.concurrent.TimeUnit;
@@ -11,6 +12,7 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AbstractProgram implements Program{
     protected static Runtime runtime=Runtime.getRuntime();
+    protected static Logger log= Logger.getLogger(AbstractProgram.class);
     /**
      * 获取输入用例的输入流
      * @param inputFileDir 输入用例所在路径
@@ -57,9 +59,10 @@ public abstract class AbstractProgram implements Program{
             Process child=runtime.exec(getExecutionCommand(codeDir));
             BufferedOutputStream inputForChildProcess= (BufferedOutputStream) child.getOutputStream();
             BufferedInputStream outputOfChildProcess = (BufferedInputStream) child.getInputStream();
-            File executionErrorLog=new File(codeDir+"\\ee.txt");//收集错误，譬如越界等运行时错误
-            Thread errThread=new Thread(new ErrStreamReader(child.getErrorStream(),executionErrorLog));
-            errThread.start();
+            StringBuilder builder=new StringBuilder();//收集错误信息
+            boolean executionErrorState=false;//false表示错误收集线程未收集完，1表示收集完错误
+            Thread errThread=new Thread(new ErrStreamReader(child.getErrorStream(),builder,executionErrorState));
+            errThread.start();//运行错误信息收集线程
             while ((len = inputFileStream[i].read()) != -1) {//读取至文件末尾
                 //向子程序输入
                 inputForChildProcess.write((byte)len);
@@ -69,20 +72,19 @@ public abstract class AbstractProgram implements Program{
             long start = System.currentTimeMillis();
             boolean exit=child.waitFor(1, TimeUnit.SECONDS);//等待子进程完成
             long tCost=System.currentTimeMillis() - start;
+            inputForChildProcess.close();
             if (!exit){
-                resultStates[i]=new State(0,(int)tCost,0,2,"TLE");
+                resultStates[i]=new State(0,0,(int)tCost,0,2,"TLE");
+                outputOfChildProcess.close();
+                outputFileStream[i].close();
                 continue;
             }
-            inputForChildProcess.close();
-            if (executionErrorLog.length()!=0){//将运行时错误读到内存
-                FileReader errorReader=new FileReader(executionErrorLog);
-                char[] errors=new char[256];
-                StringBuilder builder=new StringBuilder();
-                while (errorReader.read(errors)!=-1){
-                    builder.append(errors);
-                }
-                resultStates[i]=new State(0,-1,0,4,builder.toString());
-                errorReader.close();
+        //    while (!executionErrorState){}//等待错误信息收集完
+            //将运行时错误读到内存
+            if (builder.length()!=0) {
+                resultStates[i] = new State(0, 0, -1, 0, 4, builder.toString());
+                outputOfChildProcess.close();
+                outputFileStream[i].close();
                 continue;
             }
 
@@ -90,20 +92,21 @@ public abstract class AbstractProgram implements Program{
             while ((len = outputFileStream[i].read()) != -1) {
                 len2=outputOfChildProcess.read();
                 if (len!=len2) {
-                    resultStates[i]=new State(0,(int)tCost,0,4,"wrong answer");//wa
+                    resultStates[i]=new State(0, 0, (int)tCost,0,4,"wrong answer");//wa
                     break;
                 }
             }
 
             //确保标准输出用例与程序输出同时读完才能正确
             if ((len2=outputOfChildProcess.read())!=-1){
-                resultStates[i]=new State(0,(int)tCost,0,4,"wrong answer");//wa
+                resultStates[i]=new State(0, 0, (int)tCost,0,4,"wrong answer");//wa
             }
             if (resultStates[i]==null){
-                resultStates[i]=new State(0,(int)tCost,0,0,"accepted");
+                resultStates[i]=new State(0, 0, (int)tCost,0,0,"accepted");
             }
             child.destroy();
             outputOfChildProcess.close();
+            outputFileStream[i].close();
             errThread.interrupt();
         }
         return resultStates;

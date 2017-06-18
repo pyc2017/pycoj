@@ -40,9 +40,9 @@ public class JavaProgram extends AbstractProgram {
                 sb.append("\r\n");
             }
             //编译错误
-            return new State(0,0,0,1,sb.toString());
+            return new State(0, 0, 0,0,1,sb.toString());
         }
-        return new State(0,0,0,0,"");//submitId t m state info
+        return new State(0, 0, 0,0,0,"");//submitId t m state info
     }
 
     @Override

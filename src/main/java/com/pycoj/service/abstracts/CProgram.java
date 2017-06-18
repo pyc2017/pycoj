@@ -13,26 +13,22 @@ public class CProgram extends AbstractProgram {
     public State compile(File fileName) {
         try {
             Process cProgramCompilationProcess=runtime.exec("cmd /c gcc -std=c99 -o main.exe main.c",null,fileName);
-            File compileErrorLogFile=new File(fileName,"ce.txt");//记录compile错误
-            new Thread(new ErrStreamReader(cProgramCompilationProcess.getErrorStream(),compileErrorLogFile)).start();
+            StringBuilder builder=new StringBuilder();
+            boolean state=false;
+            new Thread(new ErrStreamReader(cProgramCompilationProcess.getErrorStream(),builder,state)).start();
             cProgramCompilationProcess.waitFor();
-            File file=new File(fileName+"\\main.exe");
-            if (!file.exists()){
-                FileInputStream is=new FileInputStream(new File(fileName,"ce.txt"));
-                StringBuilder information=new StringBuilder();
-                byte[] bytes=new byte[1024];
-                while (is.read(bytes)!=-1){//生成编译错误消息
-                    information.append(bytes);
-                }
-                is.close();
-                return new State(0,0,0,1,information.toString());
+            //log.info("error collecting starts...");
+
+            //log.info("error collecting ends...");
+            if (builder.length()!=0) {
+                return new State(0, 0, 0, 0, 1, builder.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return new State(0,0,0,0,"");
+        return new State(0, 0,0,0,0,"");
     }
 
     @Override
