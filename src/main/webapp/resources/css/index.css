@@ -1,9 +1,20 @@
-.navbar-brand img{
-    width: 45px;
-    height: 28px;
+body{
+    background-color: #f8f8f8;
+}
+.navbar{
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    right: 0;
 }
 input,button,a {
     outline:0 none !important; blr:expression(this.onFocus=this.blur());
+}
+.container{
+    background-color: #ffffff;
+    margin-top: 52px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 .question-detail{
     background-color: #e3e3e3;
@@ -25,18 +36,51 @@ select{
     width: 50%;
 }
 .navbar-default{
-    background-image: linear-gradient(to bottom, #ff9462 0, rgba(255, 148, 98, 1.0) 100%);
+    background-image: linear-gradient(to bottom, #ffffff 0, rgba(255, 254, 250, 1.0) 100%);
     font-family: -apple-system,SF UI Text,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,sans-serif;
     font-weight: lighter;
     font-size: 19px;
 }
-.navbar-default .navbar-nav > li > a {
-    color: #ffffff;
-}
 .navbar-default .navbar-brand{
-    color: #ffffff;
-    font-size: 24px;
+    font-size: 26px;
 }
 #example_zip_file{
     padding-left: 8px;
+}
+#login-form{
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 400px;
+}
+#login-form button{
+    background-image: linear-gradient(to bottom,#ff9462 0, #F18860 100%);
+    background-color: #F18860;
+    border-color: #f0ad4e;
+}
+.glyphicon{
+    color: #ff9462;
+}
+.pagination > .active > a{
+    background-color: #ff9462;
+    border-color: #f0ad4e;
+}
+.pagination > .active > a:hover{
+    background-color: #f18860;
+    border-color: #f0ad4e;
+}
+a{
+    color: #a9b5c0;
+}
+table a{
+    color: #000000;
+}
+#questionslist{
+    margin-top: 50px;
+}
+#questionslist a{
+    text-decoration: none;
+}
+.shadow{
+    box-shadow: 6px 6px 20px 0px rgba(137,137,137,0.6);
 }

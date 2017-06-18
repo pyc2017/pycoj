@@ -13,8 +13,8 @@
     <jsp:include page="nav.jsp"></jsp:include>
     <div class="row">
         <div class="col-md-2"></div>
-        <div class="container col-md-6">
-            <table class="table table-striped" id="questionslist">
+        <div class="container col-md-6 shadow">
+            <table class="table" id="questionslist">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -33,5 +33,6 @@
         <div class="col-md-4"></div>
     </div>
 <script src="<%=path%>/resources/js/index.js"></script>
+
 </body>
 </html>

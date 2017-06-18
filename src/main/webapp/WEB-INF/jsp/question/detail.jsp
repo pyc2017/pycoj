@@ -16,14 +16,14 @@
     <jsp:include page="../nav.jsp"></jsp:include>
     <div class="row">
         <div class="col-md-2"></div>
-        <div class="container col-md-6">
+        <div class="container col-md-6 shadow">
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#question" aria-controls="question" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>&nbsp;Description</a></li>
                 <li role="presentation"><a href="#result" aria-controls="result" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;Result</a></li>
                 <li role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>&nbsp;Submit History</a></li>
                 <li role="presentation"><a href="#comment" aria-controls="comment" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;Comment</a></li>
             </ul>
-            <div role="tabpanel" class="tab-pane shadow active" id="question">
+            <div role="tabpanel" class="tab-pane active" id="question">
                 <h2>${question.title}</h2>
                 <h3>Description</h3>
                 <pre>${question.description}</pre>
@@ -34,7 +34,7 @@
                 <h3>Hint</h3>
                 <pre>${question.hint}</pre>
                 <div style="margin-top: 30px;">
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                    <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                     </button>
                 </div>
@@ -90,16 +90,12 @@
                     "lang": $("#lang").val()
                 },
                 success: function (data) {
-                    $("#result").empty();
-                    switch (data["state"]){
-                        case 0:
-                            $("#result").append("<div class=\"alert alert-success\" role=\"alert\"><p>Accepted</p></div>");
-                            break;
-                        case 1:
-                            $("#result").append("<div class=\"alert alert-danger\" role=\"alert\"><p>编译错误</p></div>");
-                            $("#result div").append("<p>"+data["info"]+"</p>");
-                            break;
-                    }
+                    var sock=new WebSocket("ws://"+window.location.host+"<%=path%>/state/search/${question.id}/"+data);
+                    sock.onopen=function () {
+                    };
+                    sock.onmessage=function (event) {
+                        console.log(event);
+                    };
                 },
                 beforeSend: function () {
                     $("#result").empty();

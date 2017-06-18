@@ -1,4 +1,13 @@
 $(document).ready(function () {
+    var scrollLength=0;
+    $(this).scroll(function () {
+        if ($(this).scrollTop()>scrollLength){
+            $(".navbar").fadeOut();
+        }else {
+            $(".navbar").fadeIn();
+        }
+        scrollLength=$(this).scrollTop();
+    })
     updateQuestion(1);
 })
 function updateQuestion(page) {
