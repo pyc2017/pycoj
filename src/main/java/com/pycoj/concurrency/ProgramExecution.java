@@ -58,7 +58,6 @@ public class ProgramExecution implements Runnable {
             //设置用户信息
             submitInfo.setCoderId(coderId);
             submitDao.saveSubmit(submitInfo);
-            log.info("save submit");
             if (compileResult.getState()==0) {//编译成功
                 while (solutionTaskCount.get()>100){
                 }
@@ -69,7 +68,6 @@ public class ProgramExecution implements Runnable {
                 submitInfo.setStates(new State[]{compileResult});
             }
             submitDao.saveState(submitInfo);
-            log.info("save state");
         } catch (Exception e) {
             e.printStackTrace();
         }

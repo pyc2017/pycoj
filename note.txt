@@ -1,4 +1,0 @@
-发布的时候需要修改:
-com.pycoj.service.EmailHandler.java中的HOSTIP变量
-QuestionService中的filePrefix
-SolutionService中的filePrefix

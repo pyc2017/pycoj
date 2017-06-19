@@ -23,4 +23,7 @@
           WHERE `coder_id`=#{coderId} AND `question_id`=#{questionId}
         )
     </select>
+    <delete id="deleteSubmitAndStateByCoderIdAndQuestionId">
+        DELETE FROM `submit` WHERE `coder_id`=#{coderId} AND `question_id`=#{questionId}
+    </delete>
 </mapper>

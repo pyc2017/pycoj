@@ -14,4 +14,7 @@ public interface SubmitDao {
     public boolean saveState(@Param("submit")Submit submit);
     public State[] selectStatesByCoderIdAndQuestionId(@Param("coderId")int coderId,
                                                       @Param("questionId")int questionId);
+
+    public boolean deleteSubmitAndStateByCoderIdAndQuestionId(@Param("coderId")int coderId,
+                                                              @Param("questionId")int questionId);
 }

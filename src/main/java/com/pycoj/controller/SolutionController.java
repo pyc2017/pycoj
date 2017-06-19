@@ -1,6 +1,8 @@
 package com.pycoj.controller;
 
 import com.pycoj.entity.Coder;
+import com.pycoj.entity.State;
+import com.pycoj.entity.Submit;
 import com.pycoj.service.SolutionService;
 import com.pycoj.service.abstracts.CProgram;
 import com.pycoj.service.abstracts.JavaProgram;
@@ -30,18 +32,31 @@ public class SolutionController {
      * @throws Exception
      */
     @RequestMapping(value="/submit/{id}",method = RequestMethod.POST)
-    @ResponseBody public boolean userSolveQuestion(@RequestParam("code")String code,
+    @ResponseBody public int  userSolveQuestion(@RequestParam("code")String code,
                                    @RequestParam("lang")int lang,
                                    @PathVariable int id,
                                    HttpSession session) throws Exception {
         Coder coder=(Coder) session.getAttribute("coder");
         if (coder==null){//需要重新返回
-            return false;
+            return -1;
         }
         /*存储文件*/
         String fileName=service.saveSolution(id,code,program[lang]);
         /*运行文件*/
         service.runSolution(id,fileName,program[lang],coder.getId());
-        return true;
+        return coder.getId();
+    }
+
+    /**
+     * coder查询最近一次提交的结果
+     * @param id
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "/submit/ask/{id}",method = RequestMethod.GET)
+    @ResponseBody public State[] coderQueryForTheLastSubmit(@PathVariable int id,
+                                                            HttpSession session){
+        Coder coder= (Coder) session.getAttribute("coder");
+        return service.getStates(id,coder.getId());
     }
 }

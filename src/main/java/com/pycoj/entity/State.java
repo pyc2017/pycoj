@@ -12,6 +12,17 @@ public class State {
     private int state;//0成功，1编译不成功，2超时，3超内存，4输出不正确
     private String info;
 
+    public State(int id, int submitId, int timeCost, int memoryCost, int state, String info) {
+        this.id = id;
+        this.submitId = submitId;
+        this.timeCost = timeCost;
+        this.memoryCost = memoryCost;
+        this.state = state;
+        this.info = info;
+    }
+
+    public State(){}
+
     public int getState() {
         return state;
     }
@@ -60,11 +71,11 @@ public class State {
         this.memoryCost = memoryCost;
     }
 
-    public State(int submitId, int timeCost, int memoryCost, int state, String info) {
-        this.submitId = submitId;
-        this.timeCost = timeCost;
-        this.memoryCost = memoryCost;
-        this.state = state;
-        this.info = info;
+    public String toString(){
+        return "{\"t\":\""+timeCost+
+                "\",\"m\":\""+memoryCost+
+                "\",\"state\":\""+state+
+                "\",\"info\":\""+info+
+                "\"}";
     }
 }

@@ -20,7 +20,6 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#question" aria-controls="question" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>&nbsp;Description</a></li>
                 <li role="presentation"><a href="#result" aria-controls="result" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;Result</a></li>
-                <li role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>&nbsp;Submit History</a></li>
                 <li role="presentation"><a href="#comment" aria-controls="comment" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;Comment</a></li>
             </ul>
             <div role="tabpanel" class="tab-pane active" id="question">
@@ -39,8 +38,10 @@
                     </button>
                 </div>
             </div>
-            <div role="tabpanel" class="tab-pane fade" id="history">...</div>
-            <div role="tabpanel" class="tab-pane fade wrapp" id="result"></div>
+            <div role="tabpanel" class="tab-pane fade wrapp" id="result">
+                <div class="states"></div>
+                <button type="button" class="btn-default btn" id="state_refresh_button"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+            </div>
             <div role="tabpanel" class="tab-pane fade" id="comment">...</div>
         </div>
         <div class="col-md-4"></div>
@@ -80,32 +81,50 @@
             $(this).tab('show');
         })
         $("#submit").click(function () {
-            $(".close").click();
-            $("a[href='#result']").click();
            $.ajax({
-                url: "/submit/${question.id}",
+                url: "<%=path%>/submit/${question.id}",
                 type: "post",
                 data:{
                     "code": $("#code").val(),
                     "lang": $("#lang").val()
                 },
                 success: function (data) {
-                    var sock=new WebSocket("ws://"+window.location.host+"<%=path%>/state/search/${question.id}/"+data);
-                    sock.onopen=function () {
-                    };
-                    sock.onmessage=function (event) {
-                        console.log(event);
-                    };
+                    $(".close").click();
+                    $("a[href='#result']").click();
+                    $("#state_refresh_button").click();
                 },
                 beforeSend: function () {
-                    $("#result").empty();
-                    $("#result").append("<div class=\"col-md-3\"></div><div class=\"load-3 col-md-3\"></div>");
-                    for (var i=1;i<=8;i++) {
-                        $(".load-3").append("<div class=\"k-line2 k-line12-"+i+"\"></div>");
+                    waiting();
+                }
+            })
+        })
+        $("#state_refresh_button").click(function () {
+            $.ajax({
+                url: "<%=path%>/submit/ask/${question.id}",
+                type: "get",
+                success: function (data) {
+                    if (data==null||data.length==0){
+                        waiting();
+                    }else{
+                        $(".states").empty();
+                        for (var i=1;i<=data.length;i++){
+                            if (data[i-1]["info"]=="accepted"){
+                                $(".states").append("<div class=\"state-success state\"><h4>CASE "+i+":Accepted</h4><p>"+data[i-1]["timeCost"]+"ms&nbsp;"+data[i-1]["memoryCost"]+"kb</p></div>");
+                            }else{
+                                $(".states").append("<div class=\"state-fail state\"><h4>CASE "+i+"</h4><p>"+data[i-1]["info"]+"</p>");
+                            }
+                        }
                     }
                 }
             })
         })
+        var waiting=function () {
+            $(".states").empty();
+            $(".states").append("<div class=\"col-md-3\"></div><div class=\"load-3 col-md-3\"></div>");
+            for (var i=1;i<=8;i++) {
+                $(".load-3").append("<div class=\"k-line2 k-line12-"+i+"\"></div>");
+            }
+        }
     })
 </script>
 </body>

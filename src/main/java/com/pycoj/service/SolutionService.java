@@ -81,10 +81,16 @@ public class SolutionService {
      * @param dirName 局部路径名字
      * @param program 程序类型
      */
-    public void runSolution(int id, String dirName, Program program,int userId) throws Exception {
+    public void runSolution(int id, String dirName, Program program,int coderId) throws Exception {
         Thread t=new Thread(
-                new ProgramExecution(filePrefix,dirName,questionDir,id,program,submitDao,userId)
+                new ProgramExecution(filePrefix,dirName,questionDir,id,program,submitDao,coderId)
         );
         t.start();
+        //删除上次的完成信息
+        submitDao.deleteSubmitAndStateByCoderIdAndQuestionId(coderId,id);
+    }
+
+    public State[] getStates(int questionId,int coderId){
+        return submitDao.selectStatesByCoderIdAndQuestionId(coderId,questionId);
     }
 }
