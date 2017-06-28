@@ -32,7 +32,7 @@
         </div>
         <div class="col-md-4"></div>
     </div>
+    <jsp:include page="foot.jsp"></jsp:include>
 <script src="<%=path%>/resources/js/index.js"></script>
-
 </body>
 </html>

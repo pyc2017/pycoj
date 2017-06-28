@@ -20,7 +20,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 /**
  * Created by Heyman on 2017/4/30.
@@ -145,5 +145,14 @@ public class RootConfig {
     @Bean
     public MultipartResolver multipartResolver() throws IOException{
         return new StandardServletMultipartResolver();
+    }
+
+    @Bean
+    public ExecutorService solutionsThreadPool(){
+        return new ThreadPoolExecutor(100,
+                100,
+                Long.MAX_VALUE,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingDeque<Runnable>());
     }
 }

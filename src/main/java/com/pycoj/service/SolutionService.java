@@ -8,6 +8,7 @@ import com.pycoj.entity.Submit;
 import com.pycoj.service.abstracts.Program;
 import com.pycoj.util.MyUtil;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Heyman on 2017/5/17.
  */
 @Service("sService")
-public class SolutionService {
+public class SolutionService implements DisposableBean{
     private static final Logger log=Logger.getLogger(SolutionService.class);
 
     /**
@@ -34,6 +36,7 @@ public class SolutionService {
     @Autowired @Qualifier("filePrefix") private String filePrefix;
     @Autowired @Qualifier("inAndOut") private String questionDir;
     @Autowired private SubmitDao submitDao;
+    @Autowired private ExecutorService fixedPool;
 
     /**
      * 用户上传代码
@@ -82,15 +85,21 @@ public class SolutionService {
      * @param program 程序类型
      */
     public void runSolution(int id, String dirName, Program program,int coderId) throws Exception {
-        Thread t=new Thread(
+        //使用线程池管理，减少线程的创建、销毁的开销
+        fixedPool.execute(
                 new ProgramExecution(filePrefix,dirName,questionDir,id,program,submitDao,coderId)
         );
-        t.start();
         //删除上次的完成信息
         submitDao.deleteSubmitAndStateByCoderIdAndQuestionId(coderId,id);
     }
 
     public State[] getStates(int questionId,int coderId){
         return submitDao.selectStatesByCoderIdAndQuestionId(coderId,questionId);
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        log.info("SolutionService FixedThreadPool shutdown...");
+        fixedPool.shutdownNow();
     }
 }

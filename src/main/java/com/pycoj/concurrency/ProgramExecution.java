@@ -13,14 +13,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by Heyman on 2017/6/14.
  */
 public class ProgramExecution implements Runnable {
-    private static Logger log= Logger.getLogger(ProgramExecution.class);
     private String codeDirPrefix;
     private String codeDir;
     private String questionDir;
     private int id;//question id
     private Program program;
-    private static final AtomicInteger compilationTaskCount=new AtomicInteger(0);
-    private static final AtomicInteger solutionTaskCount=new AtomicInteger(0);
     private SubmitDao submitDao;
     private int coderId;
 
@@ -47,10 +44,7 @@ public class ProgramExecution implements Runnable {
     @Override
     public void run() {
         try {
-            while (compilationTaskCount.get()>100){}
-            compilationTaskCount.getAndIncrement();
             State compileResult=program.compile(new File(codeDirPrefix+id+"/"+codeDir));//prefix / id / dir
-            compilationTaskCount.getAndDecrement();
             //设置完成信息
             Submit submitInfo=new Submit();
             submitInfo.setDir(codeDir);
@@ -59,11 +53,7 @@ public class ProgramExecution implements Runnable {
             submitInfo.setCoderId(coderId);
             submitDao.saveSubmit(submitInfo);
             if (compileResult.getState()==0) {//编译成功
-                while (solutionTaskCount.get()>100){
-                }
-                solutionTaskCount.getAndIncrement();
                 submitInfo.setStates(program.run(codeDirPrefix+id+"/"+codeDir,questionDir,id));
-                solutionTaskCount.getAndDecrement();
             }else{//编译失败
                 submitInfo.setStates(new State[]{compileResult});
             }

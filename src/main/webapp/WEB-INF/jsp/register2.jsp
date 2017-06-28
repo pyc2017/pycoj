@@ -6,23 +6,44 @@
 <head>
     <link href="<%=path%>/resources/css/index.css" rel="stylesheet" type="text/css">
     <script src="<%=path%>/resources/js/jquery-2.0.0.min.js"></script>
+    <jsp:include page="boostrap.jsp"></jsp:include>
     <title>邮箱注册</title>
 </head>
 <body>
-<jsp:include page="nav.jsp"></jsp:include>
-<div class="container">
-    <div class="header">
-        <div class="header-description">
-            <span>加入我们</span>
+    <jsp:include page="nav.jsp"></jsp:include>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="container col-md-8 form-horizontal">
+            <div class="page-header" id="registerInfo">
+                <h1>Welcome to Pyc OJ.</h1><p>Step 2 : Submit the information.</p>
+            </div>
+            <div class="form" id="login-form">
+                <h1><span class="glyphicon glyphicon-user" aria-hidden="true"></span></h1>
+                <div class="form-group">
+                    <div class="col-sm-10 has-feedback">
+                        <input type="text" class="form-control" id="oj_username" placeholder="Account" aria-describedby="oj_usernameStatus">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 has-feedback">
+                        <input type="password" class="form-control" id="oj_password" placeholder="Password" aria-describedby="oj_passwordStatus">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 has-feedback">
+                        <input type="password" class="form-control" id="oj_password2" placeholder="Password" aria-describedby="oj_password2Status">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <button class="btn btn-info form-control" type="button" id="submit">Join</button>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="col-md-2"></div>
     </div>
-    <div class="form">
-        <p><span>@&nbsp;</span><input name="username" type="text" placeholder="您的账号" id="oj_username"/> </p>
-        <p><span>&nbsp;P&nbsp;</span><input name="password" id="oj_password" type="password" placeholder="您的密码"/> </p>
-        <p><span>&nbsp;P&nbsp;</span><input name="password_repeat" id="oj_password2" type="password" placeholder="重新输入您的密码"/> </p>
-        <p><input name="submit" type="submit" value="提交" id="submit"/> </p>
-    </div>
-</div>
+    <jsp:include page="foot.jsp"></jsp:include>
 <script type="text/javascript">
     $(document).ready(function () {
         var usernameFlag=false;
@@ -37,16 +58,10 @@
                 contentType:"application/x-www-form-urlencoded",
                 success:function (data) {
                     if (data=="true"){
-                        $("#oj_username").css("border-bottom","solid #45f63e");
-                        $("#oj_username").css("border-right","solid #45f63e");
-                        $("#oj_username").css("border-top","solid #45f63e");
-                        $("#oj_username").css("border-left","solid #45f63e");
+                        successFeedBack($("#oj_username"));
                         usernameFlag=true;
                     }else{
-                        $("#oj_username").css("border-bottom","solid #ff0606");
-                        $("#oj_username").css("border-right","solid #ff0606");
-                        $("#oj_username").css("border-top","solid #ff0606");
-                        $("#oj_username").css("border-left","solid #ff0606");
+                        errorFeedBack($("#oj_username"));
                         usernameFlag=false;
                     }
                 }
@@ -54,24 +69,12 @@
         })
         $("#oj_password2").blur(function () {
             if ($("#oj_password").val()==$("#oj_password2").val()){
-                $("#oj_password").css("border-bottom","solid #45f63e");
-                $("#oj_password").css("border-right","solid #45f63e");
-                $("#oj_password").css("border-top","solid #45f63e");
-                $("#oj_password").css("border-left","solid #45f63e");
-                $("#oj_password2").css("border-bottom","solid #45f63e");
-                $("#oj_password2").css("border-right","solid #45f63e");
-                $("#oj_password2").css("border-top","solid #45f63e");
-                $("#oj_password2").css("border-left","solid #45f63e");
+                successFeedBack($("#oj_password"));
+                successFeedBack($("#oj_password2"));
                 passwordFlag=true;
             }else{
-                $("#oj_password").css("border-bottom","solid #ff0606");
-                $("#oj_password").css("border-right","solid #ff0606");
-                $("#oj_password").css("border-top","solid #ff0606");
-                $("#oj_password").css("border-left","solid #ff0606");
-                $("#oj_password2").css("border-bottom","solid #ff0606");
-                $("#oj_password2").css("border-right","solid #ff0606");
-                $("#oj_password2").css("border-top","solid #ff0606");
-                $("#oj_password2").css("border-left","solid #ff0606");
+                errorFeedBack($("#oj_password"));
+                errorFeedBack($("#oj_password2"));
                 passwordFlag=false;
             }
         })
@@ -98,13 +101,27 @@
                     }
                 })
             }else{
-                $("#submit").css("border-bottom","solid #ff0606");
-                $("#submit").css("border-right","solid #ff0606");
-                $("#submit").css("border-top","solid #ff0606");
-                $("#submit").css("border-left","solid #ff0606");
             }
         })
     })
+    var successFeedBack=function (e) {
+        var parent=e.parent();
+        parent.removeClass("has-error");
+        parent.addClass("has-success");
+        var children=[];
+        children=parent.find("span");
+        children.remove();
+        parent.append("<span class=\"glyphicon glyphicon-ok form-control-feedback\" aria-hidden=\"true\"></span><span id=\""+e.attr("id")+"Status\" class=\"sr-only\">(success)</span>")
+    }
+    var errorFeedBack=function (e) {
+        var parent=e.parent();
+        parent.removeClass("has-success");
+        parent.addClass("has-error");
+        var children=[];
+        children=parent.find("span");
+        children.remove();
+        parent.append("<span class=\"glyphicon glyphicon-remove form-control-feedback\" aria-hidden=\"true\"></span><span id=\""+e.attr("id")+"Status\" class=\"sr-only\">(error)</span>")
+    }
 </script>
 </body>
 </html>
