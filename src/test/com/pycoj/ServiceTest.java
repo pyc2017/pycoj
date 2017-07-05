@@ -1,7 +1,9 @@
 package com.pycoj;
 
 import com.pycoj.config.RootConfig;
+import com.pycoj.entity.Coder;
 import com.pycoj.entity.Question;
+import com.pycoj.service.CoderService;
 import com.pycoj.service.EmailService;
 import com.pycoj.service.SolutionService;
 import com.pycoj.service.abstracts.JavaProgram;
@@ -28,13 +30,16 @@ import java.util.Date;
 @Transactional
 @ContextConfiguration(classes = {RootConfig.class})
 public class ServiceTest {
-    @Autowired
-    private MailSender sender;
+    @Autowired private MailSender sender;
+    @Autowired private EmailService service;
+    @Autowired private SolutionService service2;
+    @Autowired private CoderService cService;
 
-    @Autowired
-    private EmailService service;
-    @Autowired
-    private SolutionService service2;
-
-
+    @Test
+    public void selectCoderTest(){
+        Coder oldCoder=new Coder();
+        oldCoder.setUsername("root");
+        oldCoder.setPassword("root");
+        System.out.println(cService.login(oldCoder));
+    }
 }

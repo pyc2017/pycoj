@@ -47,6 +47,7 @@ public class SolutionService implements DisposableBean{
      */
     public String saveSolution(int id, String code, Program programType) {
         try {
+
             String randomString=MyUtil.getRandomString();
             //filePrefix / id / random string
             File file=new File(filePrefix+id+"/"+randomString);

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -16,6 +17,7 @@ import java.util.Properties;
  * Created by Heyman on 2017/5/1.
  */
 @Configuration
+@EnableTransactionManagement
 @ComponentScan(basePackages = {"com.pycoj.dao"})
 @MapperScan(basePackages = {"com.pycoj.dao"})
 public class PersistanceConfig {

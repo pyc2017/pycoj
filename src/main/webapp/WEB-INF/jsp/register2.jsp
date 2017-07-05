@@ -7,6 +7,8 @@
     <link href="<%=path%>/resources/css/index.css" rel="stylesheet" type="text/css">
     <script src="<%=path%>/resources/js/jquery-2.0.0.min.js"></script>
     <jsp:include page="boostrap.jsp"></jsp:include>
+    <script src="<%=path%>/resources/js/login.js"></script>
+    <script src="<%=path%>/resources/js/register2.js"></script>
     <title>邮箱注册</title>
 </head>
 <body>
@@ -44,84 +46,5 @@
         <div class="col-md-2"></div>
     </div>
     <jsp:include page="foot.jsp"></jsp:include>
-<script type="text/javascript">
-    $(document).ready(function () {
-        var usernameFlag=false;
-        var passwordFlag=false;
-        $("#oj_username").blur(function () {
-            $.ajax({
-                url:"<%=path%>/register/checku/",
-                data:{
-                    "oj_username": $("#oj_username").val()
-                },
-                type:"POST",
-                contentType:"application/x-www-form-urlencoded",
-                success:function (data) {
-                    if (data=="true"){
-                        successFeedBack($("#oj_username"));
-                        usernameFlag=true;
-                    }else{
-                        errorFeedBack($("#oj_username"));
-                        usernameFlag=false;
-                    }
-                }
-            })
-        })
-        $("#oj_password2").blur(function () {
-            if ($("#oj_password").val()==$("#oj_password2").val()){
-                successFeedBack($("#oj_password"));
-                successFeedBack($("#oj_password2"));
-                passwordFlag=true;
-            }else{
-                errorFeedBack($("#oj_password"));
-                errorFeedBack($("#oj_password2"));
-                passwordFlag=false;
-            }
-        })
-        $("#submit").click(function () {
-            var reg=new RegExp("(^|&)email=([^&]*)(?=(&|$))");
-            var email=window.location.search.substr(1).match(reg)[0].substring(6);
-            if (usernameFlag&&passwordFlag){
-                $.ajax({
-                    url:"<%=path%>/register/",
-                    data:{
-                        "username": $("#oj_username").val(),
-                        "password":$("#oj_password").val(),
-                        "email":email
-                    },
-                    type:"POST",
-                    contentType:"application/x-www-form-urlencoded",
-                    success:function (data) {
-                        if (data=="success"){
-                            alert("注册成功~!");
-                            window.location="<%=path%>/index/";
-                        }else{
-                            alert("注册失败，请联系管理员");
-                        }
-                    }
-                })
-            }else{
-            }
-        })
-    })
-    var successFeedBack=function (e) {
-        var parent=e.parent();
-        parent.removeClass("has-error");
-        parent.addClass("has-success");
-        var children=[];
-        children=parent.find("span");
-        children.remove();
-        parent.append("<span class=\"glyphicon glyphicon-ok form-control-feedback\" aria-hidden=\"true\"></span><span id=\""+e.attr("id")+"Status\" class=\"sr-only\">(success)</span>")
-    }
-    var errorFeedBack=function (e) {
-        var parent=e.parent();
-        parent.removeClass("has-success");
-        parent.addClass("has-error");
-        var children=[];
-        children=parent.find("span");
-        children.remove();
-        parent.append("<span class=\"glyphicon glyphicon-remove form-control-feedback\" aria-hidden=\"true\"></span><span id=\""+e.attr("id")+"Status\" class=\"sr-only\">(error)</span>")
-    }
-</script>
 </body>
 </html>

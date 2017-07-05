@@ -22,9 +22,7 @@ import java.util.Map;
 public class EmailService {
     @Autowired
     private JmsOperations jmsOperations;
-    @Autowired
-    @Qualifier("tokenMap")
-    private Map<String,String> map;
+    @Autowired @Qualifier("tokenMap") private Map<String,String> map;
 
     /**
      * 交给其他bean处理，发送邮箱验证

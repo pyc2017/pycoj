@@ -4,6 +4,7 @@
 <head>
     <script src="<%=path%>/resources/js/jquery-2.0.0.min.js"></script>
     <jsp:include page="boostrap.jsp"></jsp:include>
+    <script src="<%=path%>/resources/js/login.js"></script>
     <link href="<%=path%>/resources/css/index.css" rel="stylesheet" type="text/css">
     <title>邮箱注册</title>
 </head>
@@ -24,7 +25,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-10">
-                        <button class="btn btn-info form-control" type="button" id="register1_submit">Validate Your Email</button>
+                        <button class="btn btn-info form-control" type="button" id="register1_submit" onclick="register1_submit('<%=path%>')">Validate Your Email</button>
                     </div>
                 </div>
             </div>
@@ -32,22 +33,5 @@
         <div class="col-md-2"></div>
     </div>
     <jsp:include page="foot.jsp"></jsp:include>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#register1_submit").click(function(){
-            $.ajax({
-                url:"<%=path%>/register/send/",
-                data:{
-                    "email":$("#oj_email").val()
-                },
-                type:"POST",
-                success:function () {
-                    alert("请登陆邮箱，点击相应链接进行下一步操作");
-                    window.location="<%=path%>/index/";
-                }
-            })
-        })
-    })
-</script>
 </body>
 </html>

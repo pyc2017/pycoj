@@ -93,6 +93,7 @@ table a{
     color: #d2231a;
 }
 footer{
+    margin-bottom: 0px;
     padding: 10px 17% 20px 17%;
     background-color: #00003c;
     color: #ffffff;
@@ -108,4 +109,14 @@ footer > div{
 }
 #registerInfo{
     padding-left: 50px;
+}
+#state_refresh_button_block{
+    margin-top: 8px;
+    float: right;
+}
+.submit{/*提交解决方法的按钮*/
+    background-image: linear-gradient(to bottom,#ff9462 0, #F18860 100%);
+    background-color: #F18860;
+    border-color: #f0ad4e;
+    color: #ffffff;
 }
