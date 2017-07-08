@@ -50,7 +50,8 @@ public abstract class AbstractProgram implements Program{
         State[] resultStates=new State[inputFileStream.length];
 
         //开始执行子进程
-        int len=-1,len2=-1;
+        int len=-1;
+        byte[] bytes=new byte[1024];
         for (int i=0;i<inputFileStream.length;i++) {
             Process child=runtime.exec(getExecutionCommand(codeDir));
             BufferedOutputStream inputForChildProcess= (BufferedOutputStream) child.getOutputStream();
@@ -66,8 +67,9 @@ public abstract class AbstractProgram implements Program{
             outputThread.start();
 
             //向子进程输入
-            while ((len = inputFileStream[i].read()) != -1) {//读取至文件末尾
-                inputForChildProcess.write((byte)len);
+            while ((len = inputFileStream[i].read(bytes)) != -1) {//读取至文件末尾
+                System.out.println(len);
+                inputForChildProcess.write(bytes,0,len);
                 inputForChildProcess.flush();
             }
             inputFileStream[i].close();
@@ -110,7 +112,6 @@ public abstract class AbstractProgram implements Program{
             child.destroy();
             outputOfChildProcess.close();
             outputFileStream[i].close();
-            errThread.interrupt();
         }
         return resultStates;
     }

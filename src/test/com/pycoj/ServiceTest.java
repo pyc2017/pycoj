@@ -44,6 +44,6 @@ public class ServiceTest {
 
     @Test
     public void runProgramTest() throws Exception {
-        javaProgram.run("E:\\ojprogram\\1\\odOJrVXdNrn68ybKsVrAbDeihCMzyGug","E:\\ojquestion\\",1);
+        javaProgram.run("E:\\ojprogram\\1\\8aDWZBfcVZfRo07J7rMnu9fQiyVfHNvC","E:\\ojquestion\\",1);
     }
 }

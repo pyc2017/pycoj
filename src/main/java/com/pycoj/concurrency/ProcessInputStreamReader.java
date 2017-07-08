@@ -19,7 +19,7 @@ public class ProcessInputStreamReader implements Runnable{
         int len=-1;
         BufferedReader reader=new BufferedReader(new java.io.InputStreamReader(err));
         try {
-            while( (len=reader.read())!=-1){//将运行错误或者编译错误输出到文件当中
+            while( (len=reader.read())!=-1){
                 builder.append((char)len);
             }
             reader.close();
