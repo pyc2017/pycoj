@@ -18,6 +18,7 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.*;

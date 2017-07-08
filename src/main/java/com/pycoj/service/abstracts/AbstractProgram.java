@@ -1,11 +1,10 @@
 package com.pycoj.service.abstracts;
 
-import com.pycoj.concurrency.ErrStreamReader;
+import com.pycoj.concurrency.ProcessInputStreamReader;
 import com.pycoj.entity.State;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Heyman on 2017/6/12.
@@ -19,7 +18,6 @@ public abstract class AbstractProgram implements Program{
      * @return
      * @throws FileNotFoundException
      */
-    @Override
     public InputStream[] getInput(String inputFileDir) throws FileNotFoundException {
         File InputFileDir=new File(inputFileDir);
         int size=InputFileDir.list().length;
@@ -36,7 +34,6 @@ public abstract class AbstractProgram implements Program{
      * @return
      * @throws FileNotFoundException
      */
-    @Override
     public InputStream[] getOutput(String outputFileDir) throws FileNotFoundException {
         File InputFileDir=new File(outputFileDir);
         int size=InputFileDir.list().length;
@@ -47,7 +44,6 @@ public abstract class AbstractProgram implements Program{
         return streams;
     }
 
-    @Override
     public State[] run(String codeDir, String questionDir, int id) throws Exception{
         InputStream[] inputFileStream=getInput(questionDir+id);
         InputStream[] outputFileStream=getOutput(questionDir+id);
@@ -59,50 +55,57 @@ public abstract class AbstractProgram implements Program{
             Process child=runtime.exec(getExecutionCommand(codeDir));
             BufferedOutputStream inputForChildProcess= (BufferedOutputStream) child.getOutputStream();
             BufferedInputStream outputOfChildProcess = (BufferedInputStream) child.getInputStream();
-            StringBuilder builder=new StringBuilder();//收集错误信息
-            boolean executionErrorState=false;//false表示错误收集线程未收集完，1表示收集完错误
-            Thread errThread=new Thread(new ErrStreamReader(child.getErrorStream(),builder,executionErrorState));
-            errThread.start();//运行错误信息收集线程
+            //收集运行时的错误信息
+            StringBuilder errBuilder=new StringBuilder();
+            Thread errThread=new Thread(new ProcessInputStreamReader(child.getErrorStream(),errBuilder));
+            errThread.start();
+
+            //收集运行成功的时候的输出内容
+            StringBuilder outputBuilder=new StringBuilder();
+            Thread outputThread=new Thread(new ProcessInputStreamReader(child.getInputStream(),outputBuilder));
+            outputThread.start();
+
+            //向子进程输入
             while ((len = inputFileStream[i].read()) != -1) {//读取至文件末尾
-                //向子程序输入
                 inputForChildProcess.write((byte)len);
                 inputForChildProcess.flush();
             }
             inputFileStream[i].close();
-            long start = System.currentTimeMillis();
-            boolean exit=child.waitFor(1, TimeUnit.SECONDS);//等待子进程完成
-            long tCost=System.currentTimeMillis() - start;
+            child.waitFor();//等待子进程完成
             inputForChildProcess.close();
-            if (!exit){
-                resultStates[i]=new State(0,0,(int)tCost,0,2,"TLE");
+
+            int tCost=child.exitValue();
+            //获取
+            if (tCost>2000){
+                resultStates[i]=new State(0,0,2000,0,2,"TLE");
                 outputOfChildProcess.close();
                 outputFileStream[i].close();
                 continue;
             }
-        //    while (!executionErrorState){}//等待错误信息收集完
             //将运行时错误读到内存
-            if (builder.length()!=0) {
-                resultStates[i] = new State(0, 0, -1, 0, 4, builder.toString());
+            if (errBuilder.length()!=0) {
+                resultStates[i] = new State(0, 0, -1, 0, 4, errBuilder.toString());
                 outputOfChildProcess.close();
                 outputFileStream[i].close();
                 continue;
             }
 
             //获取子进程的输出，并与输出用例做对比
+            byte[] processOutputBytes=outputBuilder.toString().getBytes();
+            int index=0;
             while ((len = outputFileStream[i].read()) != -1) {
-                len2=outputOfChildProcess.read();
-                if (len!=len2) {
-                    resultStates[i]=new State(0, 0, (int)tCost,0,4,"wrong answer");//wa
+                if ( index>=processOutputBytes.length || (byte)len != processOutputBytes[index++]) {//前一个条件为了防止在标准输出长度比程序输出长度要长的情况下溢出
+                    resultStates[i]=new State(0, 0, tCost,0,4,"wrong answer");//wa
                     break;
                 }
             }
 
-            //确保标准输出用例与程序输出同时读完才能正确
-            if ((len2=outputOfChildProcess.read())!=-1){
-                resultStates[i]=new State(0, 0, (int)tCost,0,4,"wrong answer");//wa
+            //确保标准输出用例与程序输出同时读完才能正确，这种情况为程序输出与预期输出完全一致，但是多出来的部分不一致
+            if (index!=processOutputBytes.length){
+                resultStates[i]=new State(0, 0, tCost,0,4,"wrong answer");//wa
             }
             if (resultStates[i]==null){
-                resultStates[i]=new State(0, 0, (int)tCost,0,0,"accepted");
+                resultStates[i]=new State(0, 0, tCost,0,0,"accepted");
             }
             child.destroy();
             outputOfChildProcess.close();

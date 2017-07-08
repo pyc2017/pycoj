@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class SolutionController {
     @Autowired @Qualifier("sService") SolutionService service;
-    private static final Program[] program={new CProgram(),new JavaProgram()};
+    @Autowired Program[] programs;
 
     /**
      *
@@ -41,9 +41,9 @@ public class SolutionController {
             return -1;
         }
         /*存储文件*/
-        String fileName=service.saveSolution(id,code,program[lang]);
+        String fileName=service.saveSolution(id,code,programs[lang]);
         /*运行文件*/
-        service.runSolution(id,fileName,program[lang],coder.getId());
+        service.runSolution(id,fileName,programs[lang],coder.getId());
         return coder.getId();
     }
 

@@ -6,7 +6,7 @@
 <head>
     <script src="<%=path%>/resources/js/jquery-2.0.0.min.js"></script>
     <jsp:include page="boostrap.jsp"></jsp:include>
-    <link href="/resources/css/index.css" rel="stylesheet" type="text/css">
+    <link href="<%=path%>/resources/css/index.css" rel="stylesheet" type="text/css">
     <title>Pyc OJ</title>
 </head>
 <body>

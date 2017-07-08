@@ -1,8 +1,11 @@
 package com.pycoj.config;
 
+import com.pycoj.service.abstracts.Program;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +13,9 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -21,6 +27,8 @@ import java.util.Properties;
 @ComponentScan(basePackages = {"com.pycoj.dao"})
 @MapperScan(basePackages = {"com.pycoj.dao"})
 public class PersistanceConfig {
+    @Autowired @Qualifier("cProgram") Program cProgram;
+    @Autowired @Qualifier("javaProgram") Program javaProgram;
     @Bean("jdbcProperties")
     public Properties properties() {
         Properties p=new Properties();
@@ -74,5 +82,17 @@ public class PersistanceConfig {
     @Bean("inAndOut")
     public String inAndOut(){
         return properties().getProperty("submit");
+    }
+
+    @Bean("javaRunningFileInputStream")
+    public FileInputStream javaRunningFileInputStream() throws FileNotFoundException {
+        return new FileInputStream(
+                new File(filePrefix(),"Main1.class")
+        );
+    }
+
+    @Bean("programs")
+    public Program[] programs(){
+        return new Program[]{cProgram,javaProgram};
     }
 }

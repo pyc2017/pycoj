@@ -18,8 +18,8 @@
                 <li><a href="<%=path%>/index/">首页</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/register_email/">注册</a></li>
-                <li><a href="/login/">登陆</a></li>
+                <li><a href="<%=path%>/register_email/">注册</a></li>
+                <li><a href="<%=path%>/login/">登陆</a></li>
             </ul>
         </div>
     </div>
