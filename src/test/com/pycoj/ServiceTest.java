@@ -2,25 +2,20 @@ package com.pycoj;
 
 import com.pycoj.config.RootConfig;
 import com.pycoj.entity.Coder;
-import com.pycoj.entity.Question;
+import com.pycoj.entity.State;
 import com.pycoj.service.CoderService;
 import com.pycoj.service.EmailService;
 import com.pycoj.service.SolutionService;
-import com.pycoj.service.abstracts.JavaProgram;
 import com.pycoj.service.abstracts.Program;
-import com.pycoj.util.MyUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import sun.misc.BASE64Decoder;
 
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * Created by Heyman on 2017/5/1.
@@ -44,6 +39,15 @@ public class ServiceTest {
 
     @Test
     public void runProgramTest() throws Exception {
-        javaProgram.run("E:\\ojprogram\\1\\8aDWZBfcVZfRo07J7rMnu9fQiyVfHNvC","E:\\ojquestion\\",1);
+        State[] states=javaProgram.run("E:\\ojprogram\\1\\TYDYHC7mUXguMZHHVBdeua8Oo5ixie34","E:\\ojquestion\\",1);
+        for (State s:states){
+            System.out.println(s.toString());
+        }
+    }
+
+    @Test
+    public void compileJavaProgramTest() throws IOException {
+        State state=javaProgram.compile(new java.io.File("E:\\ojprogram\\1\\Aq5f2UaBm7PVbPqtMJquLuZrLlYGZY5j"));
+        System.out.println(state.toString());
     }
 }

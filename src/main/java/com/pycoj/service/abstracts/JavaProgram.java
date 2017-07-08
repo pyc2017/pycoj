@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class JavaProgram extends AbstractProgram {
     private static Logger log=Logger.getLogger(JavaProgram.class);
     private static JavaCompiler compiler= ToolProvider.getSystemJavaCompiler();
-    @Autowired @Qualifier("javaRunningFileInputStream") private FileInputStream javaRunningFileInputStream;
+    @Autowired @Qualifier("javaRunningFile") private File javaRunningFile;
 
     /**
      * 编译java文件
@@ -27,20 +27,19 @@ public class JavaProgram extends AbstractProgram {
      * @param codeDir java文件全名
      */
     public State compile(File codeDir) throws IOException {
-        //将Main1.class拷贝到目标文件夹
+        //将Main1.java拷贝到目标文件夹
+        FileInputStream javaRunningFileInputStream=new FileInputStream(javaRunningFile);
         FileChannel inputChannel=javaRunningFileInputStream.getChannel();
-        File copiedFile=new File(codeDir,"Main1.class");
+        File copiedFile=new File(codeDir,"Main1.java");
         copiedFile.createNewFile();
         FileOutputStream fos=new FileOutputStream(copiedFile);
         fos.getChannel().transferFrom(inputChannel,0,inputChannel.size());
-        //将Main1$1.class拷贝到目标文件夹
-        copiedFile=new File(codeDir,"Main1$1.class");
-        copiedFile.createNewFile();
-        fos=new FileOutputStream(copiedFile);
-        fos.getChannel().transferFrom(inputChannel,0,inputChannel.size());
+        javaRunningFileInputStream.close();
+        inputChannel.close();
+        fos.close();
         //复制装饰部分完毕
 
-        File[] files=new File[]{new File(codeDir,"Main.java")};
+        File[] files=new File[]{new File(codeDir,"Main.java"),copiedFile};
 
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();//收集错误信息
         StandardJavaFileManager manager=compiler.getStandardFileManager(diagnostics,null,null);

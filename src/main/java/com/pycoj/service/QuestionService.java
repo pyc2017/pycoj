@@ -49,8 +49,8 @@ public class QuestionService {
     }
 
 
-    @Autowired @Qualifier("inAndOut") private String inAndOut;
-    @Autowired @Qualifier("filePrefix") private String filePrefix;
+    @Autowired @Qualifier("question") private String questionDirection;
+    @Autowired @Qualifier("program") private String programDir;
     /**
      * 新建问题✔
      * @param question
@@ -64,11 +64,11 @@ public class QuestionService {
             state.setAmount(amount+1);
         }
         /*****************保存上传的输入输出用例*****************/
-        File questionDir=new File(inAndOut+question.getId());
+        File questionDir=new File(questionDirection+question.getId());
         if (!questionDir.exists()){//新建目录
             questionDir.mkdir();
         }
-        File solutionDir=new File(filePrefix+question.getId());
+        File solutionDir=new File(programDir+question.getId());
         if (!solutionDir.exists()){
             solutionDir.mkdir();
         }

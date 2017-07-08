@@ -70,25 +70,23 @@ public class PersistanceConfig {
      *
      * @return 存储用户上传的代码的文件夹
      */
-    @Bean("filePrefix")
-    public String filePrefix(){
-        return properties().getProperty("question");
+    @Bean("program")
+    public String program(){
+        return properties().getProperty("program");
     }
 
     /**
      * 题目的输入输出用例所在的文件夹，使用时还需要添加题目的id才能到达特定题目的输入输出用例所在的文件夹
      * @return
      */
-    @Bean("inAndOut")
-    public String inAndOut(){
-        return properties().getProperty("submit");
+    @Bean("question")
+    public String question(){
+        return properties().getProperty("question");
     }
 
-    @Bean("javaRunningFileInputStream")
-    public FileInputStream javaRunningFileInputStream() throws FileNotFoundException {
-        return new FileInputStream(
-                new File(filePrefix(),"Main1.class")
-        );
+    @Bean("javaRunningFile")
+    public File javaRunningFile() throws FileNotFoundException {
+        return new File(program(),"Main1.java");
     }
 
     @Bean("programs")

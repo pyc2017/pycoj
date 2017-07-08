@@ -33,8 +33,8 @@ public class SolutionService implements DisposableBean{
     /**
      * 上传文件路径
      */
-    @Autowired @Qualifier("filePrefix") private String filePrefix;
-    @Autowired @Qualifier("inAndOut") private String questionDir;
+    @Autowired @Qualifier("program") private String filePrefix;
+    @Autowired @Qualifier("question") private String questionDir;
     @Autowired private SubmitDao submitDao;
     @Autowired private ExecutorService fixedPool;
 

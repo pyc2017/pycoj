@@ -68,7 +68,6 @@ public abstract class AbstractProgram implements Program{
 
             //向子进程输入
             while ((len = inputFileStream[i].read(bytes)) != -1) {//读取至文件末尾
-                System.out.println(len);
                 inputForChildProcess.write(bytes,0,len);
                 inputForChildProcess.flush();
             }
