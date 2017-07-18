@@ -12,7 +12,7 @@
 </head>
 <body>
     <jsp:include page="../nav.jsp"></jsp:include>
-    <div class="row">
+    <div class="row myRow">
         <div class="col-md-2"></div>
         <div class="container col-md-6 shadow">
             <ul class="nav nav-tabs" role="tablist">
@@ -39,7 +39,7 @@
             <div role="tabpanel" class="tab-pane fade wrapp" id="result">
                 <div class="states row"></div>
                 <div id="state_refresh_button_block">
-                    <button type="button" class="btn" id="state_refresh_button"><span class="glyphicon glyphicon-refresh" aria-hidden="true" onclick="refresh(${question.id})"></span></button>
+                    <a id="state_refresh_button" href="javascript:void(0)"><span class="glyphicon glyphicon-refresh" aria-hidden="true" onclick="refresh(${question.id})"></span></a>
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="comment">...</div>
@@ -75,5 +75,6 @@
             </div>
         </div>
     </div>
+<script src="<%=path%>/resources/js/index.js"></script>
 </body>
 </html>

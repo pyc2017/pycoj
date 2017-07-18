@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * Created by Heyman on 2017/4/30.
  */
@@ -24,4 +26,9 @@ public class IndexController {
         return "register2";
     }
 
+    @RequestMapping(value = "/logout/",method = RequestMethod.GET)
+    public String logout(HttpSession session){
+        session.removeAttribute("coder");
+        return "redirect:/index/";
+    }
 }

@@ -7,12 +7,13 @@
     <script src="<%=path%>/resources/js/jquery-2.0.0.min.js"></script>
     <jsp:include page="boostrap.jsp"></jsp:include>
     <link href="<%=path%>/resources/css/index.css" rel="stylesheet" type="text/css">
+    <script src="<%=path%>/resources/js/index.js"></script>
     <title>Pyc OJ</title>
 </head>
 <body>
     <jsp:include page="nav.jsp"></jsp:include>
     <div class="row">
-        <div class="col-md-2"></div>
+        <div class="col-md-2 mycol-md-2"></div>
         <div class="container col-md-6 shadow">
             <table class="table" id="questionslist">
                 <thead>
@@ -30,9 +31,11 @@
                 </ul>
             </nav>
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-md-1"></div>
+        <div class="col-md-2 container shadow">
+            <jsp:include page="coder_info.jsp"></jsp:include>
+        </div>
     </div>
     <jsp:include page="foot.jsp"></jsp:include>
-<script src="<%=path%>/resources/js/index.js"></script>
 </body>
 </html>

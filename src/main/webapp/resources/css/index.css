@@ -1,12 +1,6 @@
 body{
     background-color: #f8f8f8;
 }
-.navbar{
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    right: 0;
-}
 input,button,a {
     outline:0 none !important; blr:expression(this.onFocus=this.blur());
 }
@@ -36,28 +30,59 @@ textarea{
 select{
     width: 50%;
 }
-.navbar-default{
-    background-image: linear-gradient(to bottom, #ffffff 0, rgba(255, 254, 250, 1.0) 100%);
-    font-family: -apple-system,SF UI Text,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,sans-serif;
+.mynavbar{
+    background-color: #000063;
+    font-family: NavFont;
     font-weight: lighter;
     font-size: 19px;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    right: 0;
+}
+.navbar-default .navbar-nav>li>a{
+    color: #ffffff;
+}
+.navbar-default .navbar-nav>li>a:hover{
+    color: #ffffff;
+    font-weight: bold;
 }
 .navbar-default .navbar-brand{
     font-size: 26px;
+    color: #ffffff;
+}
+.navbar-default .navbar-brand:hover{
+    font-weight: bold;
+    color: #ffffff;
+    cursor: default;
+}
+.navbar-right .dropdown-menu{
+    text-align: right;
 }
 #example_zip_file{
     padding-left: 8px;
 }
-#login-form{
-    margin-top: 150px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 400px;
+.form{
+    padding-top: 130px;
+    padding-left: 100px;
+    width: 50%;
+    float: left;
 }
-#login-form button{
-    background-image: linear-gradient(to bottom,#ff9462 0, #F18860 100%);
+.form input{
+    width: 280px;
+}
+.form button{
     background-color: #F18860;
     border-color: #f0ad4e;
+    transition: background 2s;
+    width: 280px;
+}
+.form button:hover{
+    background-color: #F18860;
+    border-color: #f0ad4e;
+}
+#register-email-form{
+    background:url(../img/bg-signin-divider.png) no-repeat;
 }
 a{
     color: #a9b5c0;
@@ -95,7 +120,7 @@ table a{
 footer{
     margin-bottom: 0px;
     padding: 10px 17% 20px 17%;
-    background-color: #00003c;
+    background-color: #000063;
     color: #ffffff;
 }
 .copyright{
@@ -119,4 +144,26 @@ footer > div{
     background-color: #F18860;
     border-color: #f0ad4e;
     color: #ffffff;
+}
+.user-head-div{
+    margin-bottom: 6px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 110px;
+    text-align: center;
+}
+.user-head-div{
+    width: 110px;
+    height: 110px;
+    background: url(../img/head/default.jpg);
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+    border-radius: 55px;
+}
+.mycol-md-2{
+    height: 85%;
+}
+@font-face {
+    font-family: NavFont;
+    src: url('font/MontserratAlternates-ExtraLight.otf');
 }

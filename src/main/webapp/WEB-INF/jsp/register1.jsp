@@ -16,7 +16,7 @@
             <div class="page-header" id="registerInfo">
                 <h1>Welcome to Pyc OJ.</h1><p>Step 1 : Validate your Email!</p>
             </div>
-            <div class="form" id="login-form">
+            <div class="form">
                 <h1><span class="glyphicon glyphicon-user" aria-hidden="true"></span></h1>
                 <div class="form-group">
                     <div class="col-sm-10">

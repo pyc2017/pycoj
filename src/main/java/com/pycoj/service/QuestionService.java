@@ -49,7 +49,7 @@ public class QuestionService {
     }
 
 
-    @Autowired @Qualifier("question") private String questionDirection;
+    @Autowired @Qualifier("questionDir") private String questionDirection;
     @Autowired @Qualifier("program") private String programDir;
     /**
      * 新建问题✔

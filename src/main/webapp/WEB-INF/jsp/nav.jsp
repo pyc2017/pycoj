@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <% String path=request.getContextPath();%>
-<nav class="navbar navbar-default row">
+<nav class="navbar navbar-default row mynavbar">
     <div class="col-md-2"></div>
     <div class="container-fluid col-md-8">
         <div class="navbar-header">
@@ -10,7 +10,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<%=path%>/index/">OJ</a>
+            <span class="navbar-brand">OJ</span>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -18,8 +18,15 @@
                 <li><a href="<%=path%>/index/">首页</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="<%=path%>/register_email/">注册</a></li>
-                <li><a href="<%=path%>/login/">登陆</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<%=path%>/login/">登录</a></li>
+                        <li><a href="<%=path%>/logout/">退出登录</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="<%=path%>/uploadHeadImage">上传头像</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

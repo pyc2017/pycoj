@@ -7,16 +7,15 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 
 /**
  * Created by Heyman on 2017/5/16.
@@ -122,6 +121,52 @@ public class CoderController {
             return "success";
         }else{
             return "fail";
+        }
+    }
+
+    @RequestMapping(value="/getUserInfo",method = RequestMethod.GET)
+    @ResponseBody
+    public void getUserInfo(HttpSession session,HttpServletResponse response){
+        Coder coder=(Coder)session.getAttribute("coder");
+        PrintWriter out=null;
+        response.setContentType("application/json;charset=UTF-8");
+        try {
+            out=response.getWriter();
+            if (coder==null){
+                out.write("");
+            }else {
+                out.write(coder.toString());
+            }
+            out.close();
+        } catch (IOException e) {
+        } finally {
+            out.close();
+        }
+    }
+
+    @RequestMapping(value = "/uploadHeadImage",method = RequestMethod.GET)
+    public String uploadHeadImage(HttpSession session){
+        if (session.getAttribute("coder")==null){
+            return "login";
+        }else{
+            return "head_image_upload";
+        }
+    }
+
+    /**
+     * 用户上传头像
+     * @param image 头像对象
+     * @return
+     */
+    @RequestMapping(value = "/uploadHeadImage",method = RequestMethod.POST)
+    @ResponseBody
+    public boolean uploadHeadImage(@RequestPart("headImage")MultipartFile image,
+                                   HttpSession session){
+        Coder coder=(Coder) session.getAttribute("coder");
+        try {
+            return service.uploadHeadImage(image,coder);
+        } catch (IOException e) {
+            return false;
         }
     }
 }

@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var scrollLength=0;
-    $(this).scroll(function () {
+    $(this).scroll(function () {//导航栏
         if ($(this).scrollTop()>scrollLength){
             $(".navbar").fadeOut();
         }else {
@@ -9,6 +9,7 @@ $(document).ready(function () {
         scrollLength=$(this).scrollTop();
     })
     updateQuestion(1);
+    getLoginUserInfo();
 })
 function updateQuestion(page) {
     /*****************questions*****************/
@@ -50,6 +51,22 @@ function updateQuestion(page) {
                 }
                 s+="</a></li>";
                 $(".pagination").append(s);
+            }
+        }
+    })
+}
+var getLoginUserInfo=function () {
+    $.ajax({
+        url: "/getUserInfo",
+        type: "get",
+        success:function (data) {
+            if (data.length==0){/*do nothing*/
+            }else{
+                if (data["headImage"]!="default.jpg") {
+                    $(".user-head-div").css("background", "url(/resources/img/head/" + data["headImage"] + ")");
+                }
+                $("#user-information-div-nickname").html(data["nickname"]);
+                $("#acAmount").html(data["ac"]);
             }
         }
     })

@@ -2,12 +2,16 @@ package com.pycoj.service;
 
 import com.pycoj.dao.CoderDao;
 import com.pycoj.entity.Coder;
+import com.pycoj.util.MyUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -18,6 +22,7 @@ public class CoderService {
     private static final Logger log=Logger.getLogger(CoderService.class);
     @Autowired private CoderDao coderDao;
     @Autowired @Qualifier("tokenMap") private Map map;
+    @Autowired @Qualifier("headImage") private String headImageDir;
 
     /**
      * 注册的时候检查用户名是否重复，没有重复则返回真
@@ -58,9 +63,28 @@ public class CoderService {
         if ((result= coderDao.selectCoderByUsernameAndPassword(coder))!=null){
             coder.setEmail(result.getEmail());
             coder.setId(result.getId());
+            coder.setHeadImage(result.getHeadImage());
+            coder.setNickname(result.getNickname());
+            coder.setAcAmount(result.getAcAmount());
             return true;
         }else {
             return false;
         }
+    }
+
+    public boolean uploadHeadImage(MultipartFile file, Coder coder) throws IOException {
+        StringBuilder builder=new StringBuilder();
+        String fileOriginalName=file.getOriginalFilename();
+        builder.append(MyUtil.getRandomString());
+        builder.append(fileOriginalName.substring(fileOriginalName.lastIndexOf('.')));
+        String fileFinalName=builder.toString();
+        File targetFile=new File(headImageDir, fileFinalName);
+        targetFile.createNewFile();
+        //存储到磁盘上
+        file.transferTo(targetFile);
+        //存储名字到数据库中
+        coderDao.updateHeadImage(fileFinalName,coder.getId());
+        coder.setHeadImage(fileFinalName);
+        return true;
     }
 }

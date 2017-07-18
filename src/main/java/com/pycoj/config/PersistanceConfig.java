@@ -79,8 +79,8 @@ public class PersistanceConfig {
      * 题目的输入输出用例所在的文件夹，使用时还需要添加题目的id才能到达特定题目的输入输出用例所在的文件夹
      * @return
      */
-    @Bean("question")
-    public String question(){
+    @Bean("questionDir")
+    public String questionDir(){
         return properties().getProperty("question");
     }
 
@@ -89,8 +89,18 @@ public class PersistanceConfig {
         return new File(program(),"Main1.java");
     }
 
+    @Bean("cRunningFile")
+    public File cRunningFile() throws FileNotFoundException {
+        return new File(program(),"main1.c");
+    }
+
     @Bean("programs")
     public Program[] programs(){
         return new Program[]{cProgram,javaProgram};
+    }
+
+    @Bean("headImage")
+    public String headImage(){
+        return properties().getProperty("head");
     }
 }

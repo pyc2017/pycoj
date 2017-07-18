@@ -31,6 +31,20 @@
                     </div>
                 </div>
             </div>
+            <div class="form" id="register-email-form">
+                <h1></h1>
+                <h4>If you don't have an acount,join us!</h4>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="oj_email" placeholder="jane.doe@example.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <button class="btn btn-info form-control" type="button" id="register1_submit" onclick="register1_submit('<%=path%>')">Validate Your Email</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-2"></div>
     </div>

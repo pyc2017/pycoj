@@ -13,6 +13,7 @@ var login_submit=function (path) {
             }else{
                 errorFeedBack($("#oj_username"));
                 errorFeedBack($("#oj_password"));
+                $("#login_submit").css("background-color","#900b09");
             }
         }
     });

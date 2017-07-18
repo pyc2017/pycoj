@@ -14,6 +14,9 @@ public class Coder {
     private String password;
     private String email;
     private String username;
+    private String headImage;
+    private String nickname;
+    private int acAmount;
 
     public String getUsername() {
         return username;
@@ -45,5 +48,38 @@ public class Coder {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getHeadImage() {
+        return headImage;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public int getAcAmount() {
+        return acAmount;
+    }
+
+    public void setAcAmount(int acAmount) {
+        this.acAmount = acAmount;
+    }
+
+    @Override
+    public String toString(){
+        return "{\"nickname\":\""+nickname+
+                "\",\"headImage\":\""+headImage+
+                "\",\"id\":\""+id+
+                "\",\"ac\":\""+acAmount+
+                "\"}";
     }
 }

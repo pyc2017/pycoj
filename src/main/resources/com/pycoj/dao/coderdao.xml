@@ -17,4 +17,7 @@
         (`username`,`password`,`email`)
         VALUES(#{coder.username},#{coder.password},#{coder.email})
     </insert>
+    <update id="updateHeadImage">
+        UPDATE `coder` SET head_image=#{head} WHERE id=#{id}
+    </update>
 </mapper>
