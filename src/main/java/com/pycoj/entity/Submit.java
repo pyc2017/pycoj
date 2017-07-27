@@ -10,6 +10,7 @@ public class Submit {
     private int questionId;//对应题目ID
     private State[] states;
     private String dir;
+    private boolean ac;
 
     public State[] getStates() {
         return states;
@@ -49,5 +50,13 @@ public class Submit {
 
     public void setDir(String dir) {
         this.dir = dir;
+    }
+
+    public boolean isAc() {
+        return ac;
+    }
+
+    public void setAc(boolean ac) {
+        this.ac = ac;
     }
 }

@@ -37,5 +37,6 @@
         </div>
     </div>
     <jsp:include page="foot.jsp"></jsp:include>
+<script>$(document).ready(function () {updateQuestion(1);getLoginUserInfo();})</script>
 </body>
 </html>

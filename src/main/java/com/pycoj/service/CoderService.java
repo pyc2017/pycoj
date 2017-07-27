@@ -22,7 +22,6 @@ public class CoderService {
     private static final Logger log=Logger.getLogger(CoderService.class);
     @Autowired private CoderDao coderDao;
     @Autowired @Qualifier("tokenMap") private Map map;
-    @Autowired @Qualifier("headImage") private String headImageDir;
 
     /**
      * 注册的时候检查用户名是否重复，没有重复则返回真
@@ -72,7 +71,7 @@ public class CoderService {
         }
     }
 
-    public boolean uploadHeadImage(MultipartFile file, Coder coder) throws IOException {
+    public boolean uploadHeadImage(String headImageDir, MultipartFile file, Coder coder) throws IOException {
         StringBuilder builder=new StringBuilder();
         String fileOriginalName=file.getOriginalFilename();
         builder.append(MyUtil.getRandomString());

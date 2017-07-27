@@ -1,9 +1,5 @@
-body{
-    background-color: #f8f8f8;
-}
-input,button,a {
-    outline:0 none !important; blr:expression(this.onFocus=this.blur());
-}
+body{background-color: #f8f8f8;}
+input,button,a{outline:0 none !important; blr:expression(this.onFocus=this.blur());}
 .container{
     background-color: #ffffff;
     margin-top: 60px;
@@ -21,47 +17,52 @@ input,button,a {
 .tab-pane{
     display: none;
 }
-.active{
-    display: block;
-}
-textarea{
-    resize: none;
-}
+.active{display: block;}
+textarea{resize: none;}
 select{
     width: 50%;
 }
 .mynavbar{
-    background-color: #000063;
     font-family: NavFont;
     font-weight: lighter;
     font-size: 19px;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    right: 0;
+    border:none;
 }
 .navbar-default .navbar-nav>li>a{
-    color: #ffffff;
+    color: #aaa;
 }
-.navbar-default .navbar-nav>li>a:hover{
-    color: #ffffff;
-    font-weight: bold;
-}
+.navbar-default .navbar-nav>.open>a:hover,.navbar-default .navbar-nav>.open>a{background-color: transparent;}
 .navbar-default .navbar-brand{
     font-size: 26px;
-    color: #ffffff;
+    color: #aaa;
 }
 .navbar-default .navbar-brand:hover{
-    font-weight: bold;
-    color: #ffffff;
     cursor: default;
 }
 .navbar-right .dropdown-menu{
     text-align: right;
 }
-#example_zip_file{
-    padding-left: 8px;
+.navbar-right>.open>.dropdown-menu>li>a{-webkit-transition: padding 0.5s;-moz-transition: padding 0.5s;-ms-transition: padding 0.5s;-o-transition: padding 0.5s;transition: padding 0.5s;}.navbar-right>.open>.dropdown-menu>li>a:hover{padding-right:30px;background-color: #4d9089;color: #ffffff;}
+#wrap{
+    background:url("/resources/img/header.jpg") no-repeat;
+    -webkit-background-size:100% 100%;
+    background-size:100% 100%;
+    padding:50px 18% 50px 18%;
+    color: #fff;
 }
+#wrap-img{
+    background-color: #000;
+    opacity: 0.2;
+    float: left;
+    margin-top:14px;
+    margin-right:20px;
+    padding:6px 8px;
+    -webkit-border-radius: 22px;
+    -moz-border-radius: 22px;
+    border-radius: 22px;
+    font-size: 28px;
+}
+#example_zip_file{padding-left: 8px;}
 .form{
     padding-top: 130px;
     padding-left: 100px;
@@ -95,16 +96,15 @@ table a{
 }
 #questionslist a{
     text-decoration: none;
+    -webkit-transition: padding 0.5s;
+    -moz-transition: padding 0.5s;
+    -ms-transition: padding 0.5s;
+    -o-transition: padding 0.5s;
+    transition: padding 0.5s;
 }
-.shadow{
-    box-shadow: 6px 6px 20px 0px rgba(137,137,137,0.6);
-}
-.state{/*查询完成情况时的框*/
-    padding: 5px;
-    margin-bottom: 8px;
-    border: solid 1px #eee;
-    border-left-width: 5px;
-}
+#questionslist a:hover{padding-left: 10px;font-size: 18px;}
+.shadow{box-shadow: 6px 6px 20px 0px rgba(137,137,137,0.6);}
+.state{/*查询完成情况时的框*/padding: 5px;margin-bottom: 8px;border: solid 1px #eee;border-left-width: 5px;}
 .state-success{
     border-left-color: #37d22c;
 }
@@ -120,7 +120,9 @@ table a{
 footer{
     margin-bottom: 0px;
     padding: 10px 17% 20px 17%;
-    background-color: #000063;
+    background:url("/resources/img/header.jpg") no-repeat;
+    -webkit-background-size:100% 100%;
+    background-size:100% 100%;
     color: #ffffff;
 }
 .copyright{
@@ -149,15 +151,13 @@ footer > div{
     margin-bottom: 6px;
     margin-left: auto;
     margin-right: auto;
-    width: 110px;
     text-align: center;
-}
-.user-head-div{
     width: 110px;
     height: 110px;
-    background: url(../img/head/default.jpg);
-    background-size:100% 100%;
-    background-repeat:no-repeat;
+}
+.user-head-div img{
+    width:inherit;
+    height:inherit;
     border-radius: 55px;
 }
 .mycol-md-2{
@@ -166,4 +166,7 @@ footer > div{
 @font-face {
     font-family: NavFont;
     src: url('font/MontserratAlternates-ExtraLight.otf');
+}
+.nobackground-color:hover{
+    background-color: #ffffff;
 }

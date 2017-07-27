@@ -10,17 +10,16 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="navbar-brand">OJ</span>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="<%=path%>/index/">首页</a></li>
+                <li><a href="<%=path%>/index/"><strong>PYC</strong>OJ</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
-                    <ul class="dropdown-menu">
+                    <a href="#" class="dropdown-toggle nobackground-color" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                        <ul class="dropdown-menu">
                         <li><a href="<%=path%>/login/">登录</a></li>
                         <li><a href="<%=path%>/logout/">退出登录</a></li>
                         <li role="separator" class="divider"></li>
@@ -32,3 +31,8 @@
     </div>
     <div class="col-md-2"></div>
 </nav>
+<div id="wrap">
+    <div id="wrap-img"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></div>
+    <h1>Welcome to Pyc OJ!</h1>
+    <span>Coding</span>
+</div>

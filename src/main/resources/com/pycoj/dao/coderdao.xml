@@ -20,4 +20,7 @@
     <update id="updateHeadImage">
         UPDATE `coder` SET head_image=#{head} WHERE id=#{id}
     </update>
+    <update id="updateACCount">
+        UPDATE `coder` SET ac_count=ac_count+1 WHERE id=#{id}
+    </update>
 </mapper>

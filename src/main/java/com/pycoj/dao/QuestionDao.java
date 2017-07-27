@@ -32,4 +32,11 @@ public interface QuestionDao {
     public int selectAmountOfQuestions();
 
     public Question selectQuestionByID(@Param("id")int id);
+
+    /**
+     * 某一个用户第一AC，增加该题目的AC数
+     * @param id
+     * @return
+     */
+    public boolean updateAddSubmit(@Param("id")int id);
 }

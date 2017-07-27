@@ -22,4 +22,7 @@
         VALUES
         (#{question.title},#{question.tag},#{question.description},#{question.input},#{question.output},#{question.hint})
     </insert>
+    <update id="updateAddSubmit">
+        UPDATE `question` SET submit=submit+1 WHERE id=#{id};
+    </update>
 </mapper>

@@ -98,9 +98,4 @@ public class PersistanceConfig {
     public Program[] programs(){
         return new Program[]{cProgram,javaProgram};
     }
-
-    @Bean("headImage")
-    public String headImage(){
-        return properties().getProperty("head");
-    }
 }

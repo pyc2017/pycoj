@@ -1,6 +1,7 @@
 package com.pycoj.service;
 
 import com.pycoj.concurrency.ProgramExecution;
+import com.pycoj.dao.CoderDao;
 import com.pycoj.dao.QuestionDao;
 import com.pycoj.dao.SubmitDao;
 import com.pycoj.entity.State;
@@ -36,6 +37,8 @@ public class SolutionService implements DisposableBean{
     @Autowired @Qualifier("program") private String filePrefix;
     @Autowired @Qualifier("questionDir") private String questionDir;
     @Autowired private SubmitDao submitDao;
+    @Autowired private CoderDao coderDao;
+    @Autowired private QuestionDao questionDao;
     @Autowired private ExecutorService fixedPool;
 
     /**
@@ -85,13 +88,19 @@ public class SolutionService implements DisposableBean{
      * @param dirName 局部路径名字
      * @param program 程序类型
      */
-    public void runSolution(int id, String dirName, Program program,int coderId) throws Exception {
+    public Submit runSolution(int id, String dirName, Program program,int coderId) throws Exception {
+        //设置完成信息
+        Submit submitInfo=new Submit();
+        submitInfo.setDir(dirName);
+        submitInfo.setQuestionId(id);
+        //设置用户信息
+        submitInfo.setCoderId(coderId);
+        submitDao.saveSubmit(submitInfo);
         //使用线程池管理，减少线程的创建、销毁的开销
         fixedPool.execute(
-                new ProgramExecution(filePrefix,dirName,questionDir,id,program,submitDao,coderId)
+                new ProgramExecution(filePrefix,dirName,questionDir,id,program,submitDao,coderDao,questionDao,submitInfo)
         );
-        //删除上次的完成信息
-        submitDao.deleteSubmitAndStateByCoderIdAndQuestionId(coderId,id);
+        return submitInfo;
     }
 
     public State[] getStates(int questionId,int coderId){

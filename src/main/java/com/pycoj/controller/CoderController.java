@@ -25,6 +25,7 @@ public class CoderController {
     private Logger log=Logger.getLogger(CoderController.class);
     @Autowired @Qualifier("emailService") private EmailService eService;
     @Autowired @Qualifier("coderService") private CoderService service;
+    private static String headImageDir=null;
 
     /**
      * 注册第一步，先输入邮箱，验证邮箱再进行下一步
@@ -159,14 +160,15 @@ public class CoderController {
      * @return
      */
     @RequestMapping(value = "/uploadHeadImage",method = RequestMethod.POST)
-    @ResponseBody
-    public boolean uploadHeadImage(@RequestPart("headImage")MultipartFile image,
+    public String uploadHeadImage(@RequestPart("headImage")MultipartFile image,
                                    HttpSession session){
         Coder coder=(Coder) session.getAttribute("coder");
-        try {
-            return service.uploadHeadImage(image,coder);
-        } catch (IOException e) {
-            return false;
+        if (headImageDir==null){
+            headImageDir=session.getServletContext().getRealPath("/")+"resources/img/head/";
         }
+        try {
+            service.uploadHeadImage(headImageDir,image,coder);
+        } catch (IOException e) {}
+        return "redirect:/index/";
     }
 }
