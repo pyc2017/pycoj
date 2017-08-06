@@ -1,16 +1,26 @@
 package com.pycoj.entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Created by 潘毅烦 on 2017/7/26.
  */
-public class Comment {
+public class Comment implements Serializable{
     private int id;
     private int questionId;
     private int coderId;
     private String content;
     private Timestamp createTime;
+    private Coder coder;
+
+    public Coder getCoder() {
+        return coder;
+    }
+
+    public void setCoder(Coder coder) {
+        this.coder = coder;
+    }
 
     public int getId() {
         return id;

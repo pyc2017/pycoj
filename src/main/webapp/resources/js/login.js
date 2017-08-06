@@ -9,7 +9,13 @@ var login_submit=function (path) {
         contentType:"application/x-www-form-urlencoded",
         success:function (data) {
             if (data=="success"){
-                window.location=path+"/index/";
+                var reg=new RegExp("(^|&)original=([^&]*)(?=(&|$))");
+                var target=window.location.search.substr(1);
+                if (target.match(reg)==null||target.match(reg)==""){
+                    window.location=path+"/index/";
+                }else{
+                    window.location=path+target.match(reg)[0].substring(9);
+                }
             }else{
                 errorFeedBack($("#oj_username"));
                 errorFeedBack($("#oj_password"));

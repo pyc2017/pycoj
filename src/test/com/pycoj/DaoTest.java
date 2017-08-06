@@ -1,9 +1,11 @@
 package com.pycoj;
 
 import com.pycoj.config.RootConfig;
+import com.pycoj.dao.CommentDao;
 import com.pycoj.dao.QuestionDao;
 import com.pycoj.dao.CoderDao;
 import com.pycoj.dao.SubmitDao;
+import com.pycoj.entity.Comment;
 import com.pycoj.entity.Question;
 import com.pycoj.entity.Coder;
 import com.pycoj.entity.State;
@@ -17,6 +19,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -32,6 +35,7 @@ public class DaoTest {
     @Autowired
     private QuestionDao questionDao;
     @Autowired private SubmitDao submitDao;
+    @Autowired private CommentDao commentDao;
 
     @Test
     public void checkUsernameExistTest(){
@@ -70,5 +74,13 @@ public class DaoTest {
         State[] states=submitDao.selectStatesByCoderIdAndQuestionId(1,1);
         Assert.notNull(states,"states is null");
         System.out.println(states.length);
+    }
+
+    @Test
+    public void getCommentsTest(){
+        List<Comment> comments=commentDao.selectCommentsByQuestionId(1);
+        for (Comment c:comments){
+            System.out.println(c.getCoder().getNickname()+","+c.getCoder().getHeadImage());
+        }
     }
 }

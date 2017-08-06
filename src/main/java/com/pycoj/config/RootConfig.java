@@ -1,5 +1,6 @@
 package com.pycoj.config;
 
+import com.google.gson.Gson;
 import com.pycoj.service.EmailHandler;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.spring.ActiveMQConnectionFactory;
@@ -27,7 +28,7 @@ import java.util.concurrent.*;
  * Created by Heyman on 2017/4/30.
  */
 @Configuration
-@Import(PersistanceConfig.class)
+@Import({RedisConfig.class,PersistanceConfig.class})
 @ComponentScan(basePackages = {"com.pycoj.entity","com.pycoj.service"})
 public class RootConfig {
     private final static String host="smtp.163.com";

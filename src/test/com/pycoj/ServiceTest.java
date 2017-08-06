@@ -3,9 +3,7 @@ package com.pycoj;
 import com.pycoj.config.RootConfig;
 import com.pycoj.entity.Coder;
 import com.pycoj.entity.State;
-import com.pycoj.service.CoderService;
-import com.pycoj.service.EmailService;
-import com.pycoj.service.SolutionService;
+import com.pycoj.service.*;
 import com.pycoj.service.abstracts.Program;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +25,8 @@ public class ServiceTest {
     @Autowired private EmailService service;
     @Autowired private SolutionService service2;
     @Autowired private CoderService cService;
+    @Autowired private CommentService commentService;
+    @Autowired private RedisService rService;
     @Autowired @Qualifier("javaProgram") private Program javaProgram;
 
     @Test
@@ -49,5 +49,11 @@ public class ServiceTest {
     public void compileJavaProgramTest() throws IOException {
         State state=javaProgram.compile(new java.io.File("E:\\ojprogram\\1\\Aq5f2UaBm7PVbPqtMJquLuZrLlYGZY5j"));
         System.out.println(state.toString());
+    }
+
+    @Test
+    public void redisTest(){
+     //   rService.putTest();
+     //   rService.getTest();
     }
 }

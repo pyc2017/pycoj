@@ -19,14 +19,17 @@ input,button,a{outline:0 none !important; blr:expression(this.onFocus=this.blur(
 }
 .active{display: block;}
 textarea{resize: none;}
+.float-left{float:left}
+.float-right{float:right}
 select{
     width: 50%;
 }
 .mynavbar{
     font-family: NavFont;
-    font-weight: lighter;
-    font-size: 19px;
+    font-weight:lighter;
+    font-size:19px;
     border:none;
+    margin-top:20px;
 }
 .navbar-default .navbar-nav>li>a{
     color: #aaa;
@@ -94,14 +97,7 @@ table a{
 #questionslist{
     margin-top: 50px;
 }
-#questionslist a{
-    text-decoration: none;
-    -webkit-transition: padding 0.5s;
-    -moz-transition: padding 0.5s;
-    -ms-transition: padding 0.5s;
-    -o-transition: padding 0.5s;
-    transition: padding 0.5s;
-}
+#questionslist a{text-decoration: none; -webkit-transition: padding 0.5s;-moz-transition: padding 0.5s;-ms-transition: padding 0.5s;-o-transition: padding 0.5s;transition: padding 0.5s;}
 #questionslist a:hover{padding-left: 10px;font-size: 18px;}
 .shadow{box-shadow: 6px 6px 20px 0px rgba(137,137,137,0.6);}
 .state{/*查询完成情况时的框*/padding: 5px;margin-bottom: 8px;border: solid 1px #eee;border-left-width: 5px;}

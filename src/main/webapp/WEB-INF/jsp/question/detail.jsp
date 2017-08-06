@@ -6,8 +6,10 @@
     <link href="<%=path%>/resources/css/loading.css" rel="stylesheet" type="text/css">
     <jsp:include page="../boostrap.jsp"></jsp:include>
     <link href="<%=path%>/resources/css/index.css" rel="stylesheet" type="text/css">
-    <script src="<%=path%>/resources/js/question.js"></script>
+    <link href="<%=path%>/resources/css/detailcomment.css" rel="stylesheet" type="text/css">
+    <script src="<%=path%>/resources/js/marked.min.js"></script>
     <script src="<%=path%>/resources/js/detail.js"></script>
+    <script src="<%=path%>/resources/js/index.js"></script>
     <title>${question.title}</title>
 </head>
 <body>
@@ -18,7 +20,7 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#question" aria-controls="question" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>&nbsp;Description</a></li>
                 <li role="presentation"><a href="#result" aria-controls="result" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;Result</a></li>
-                <li role="presentation"><a href="#comment" aria-controls="comment" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;Comment</a></li>
+                <li role="presentation"><a href="#comments" aria-controls="comments" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;Comments</a></li>
             </ul>
             <div role="tabpanel" class="tab-pane active" id="question">
                 <h2>${question.title}</h2>
@@ -42,7 +44,35 @@
                     <a id="state_refresh_button" href="javascript:void(0)"><span class="glyphicon glyphicon-refresh" aria-hidden="true" onclick="refresh(${question.id})"></span></a>
                 </div>
             </div>
-            <div role="tabpanel" class="tab-pane fade" id="comment">...</div>
+            <div role="tabpanel" class="tab-pane fade" id="comments">
+                <div id="comment-box" class="comment">
+                    <div class="comment-left"><img src="/resources/img/head/0.jpg"></div>
+                    <div class="comment-right">
+                        <div id="comment-box-header">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#comment-textarea" aria-controls="comment-textarea" role="tab" data-toggle="tab">write</a></li>
+                                <li role="presentation"><a href="#comment-show" aria-controls="comment-show" role="tab" data-toggle="tab" id="show">show comment</a></li>
+                                <li><a href="javascript:void(0)" title="Add Header" class="js-decoreate" id="AddHeader">H</a></li>
+                                <li><a href="javascript:void(0)" title="Add Italic text" class="js-decoreate" id="AddIta"><i>i</i></a></li>
+                                <li><a href="javascript:void(0)" title="Add bold text" class="js-decoreate" style="padding-right:15px;" id="AddBold"><strong>B</strong></a></li>
+                                <li><a href="javascript:void(0)" title="Insert a quote" class="js-decoreate" id="InsertQ"><strong>“</strong></a></li>
+                                <li><a href="javascript:void(0)" title="Insert code" class="js-decoreate" style="padding-right:15px;" id="InsertC"><strong>&lt;&gt;</strong></a></li>
+                                <li><a href="javascript:void(0)" title="Add a bulleted list" class="js-decoreate" id="AddBull">·-</a></li>
+                                <li><a href="javascript:void(0)" title="Add a numbered list" class="js-decoreate" id="AddNum">1.</a></li>
+                                <li><a href="javascript:void(0)" title="Add a link" class="js-decoreate" id="AddURL">URL</a></li>
+                                <li><a href="javascript:void(0)" title="Add a tast list" class="js-decoreate" id="AddTa"><span class="glyphicon glyphicon-ok"></span></a></li>
+                            </ul>
+                        </div>
+                        <div id="comment-box-content">
+                            <div role="tabpanel" class="tab-pane active" id="comment-textarea">
+                                <textarea name="content" id="oj_content"></textarea>
+                                <button class="btn btn-success" type="button" onclick="comment(${question.id})">Comment</button>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade comment-content" id="comment-show"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-4"></div>
     </div>
@@ -75,6 +105,5 @@
             </div>
         </div>
     </div>
-<script src="<%=path%>/resources/js/index.js"></script>
 </body>
 </html>

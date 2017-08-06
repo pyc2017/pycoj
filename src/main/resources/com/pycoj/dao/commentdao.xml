@@ -2,7 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pycoj.dao.CommentDao">
-    <insert id="save">
+    <select id="selectCommentsByQuestionId" resultType="com.pycoj.entity.Comment">
+        SELECT comment.* ,coder.head_image AS `coder.head_image`,coder.nickname AS `coder.nickname` FROM
+        comment INNER JOIN coder ON comment.coder_id=coder.id
+        WHERE question_id=#{id}
+    </select>
+    <insert id="save" parameterType="com.pycoj.entity.Comment" useGeneratedKeys="true" keyProperty="comment.id">
         INSERT INTO `comment`(question_id,coder_id,content,create_time) VALUES(#{comment.questionId},#{comment.coderId},#{comment.content},NOW())
     </insert>
 </mapper>
