@@ -26,7 +26,7 @@ var login_submit=function (path) {
 }
 var register1_submit=function(path){
     $.ajax({
-        url:"<%=path%>/register/send/",
+        url:path+"/register/send/",
         data:{
             "email":$("#oj_email").val()
         },

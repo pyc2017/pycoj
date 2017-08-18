@@ -26,39 +26,45 @@ public class JavaProgram extends AbstractProgram {
      * 由于需要添加计时功能，需要额外有其他类来调用当前类，采用装饰模式，该类为Main1.class
      * @param codeDir java文件全名
      */
-    public State compile(File codeDir) throws IOException {
-        //将Main1.java拷贝到目标文件夹
-        FileInputStream javaRunningFileInputStream=new FileInputStream(javaRunningFile);
-        FileChannel inputChannel=javaRunningFileInputStream.getChannel();
-        File copiedFile=new File(codeDir,"Main1.java");
-        copiedFile.createNewFile();
-        FileOutputStream fos=new FileOutputStream(copiedFile);
-        fos.getChannel().transferFrom(inputChannel,0,inputChannel.size());
-        javaRunningFileInputStream.close();
-        inputChannel.close();
-        fos.close();
-        //复制装饰部分完毕
-
-        File[] files=new File[]{new File(codeDir,"Main.java"),copiedFile};
-
-        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();//收集错误信息
-        StandardJavaFileManager manager=compiler.getStandardFileManager(diagnostics,null,null);
-        Iterable<? extends JavaFileObject> compilation=manager.getJavaFileObjectsFromFiles(Arrays.asList(files));
-        compiler.getTask(null,manager,diagnostics,null,null,compilation).call();
-        manager.close();
-        if (diagnostics.getDiagnostics().size()>0){
-            StringBuilder sb=new StringBuilder();
-            for (Diagnostic d:diagnostics.getDiagnostics()){
-                sb.append("错误发生在第");
-                sb.append(d.getLineNumber());
-                sb.append("行：");
-                sb.append(d.getMessage(null));
-                sb.append("\r\n");
+    public State compile(File codeDir) {
+        try {
+            //将Main1.java拷贝到目标文件夹
+            FileInputStream javaRunningFileInputStream = new FileInputStream(javaRunningFile);
+            FileChannel inputChannel = javaRunningFileInputStream.getChannel();
+            File copiedFile = new File(codeDir, "Main1.java");
+            copiedFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(copiedFile);
+            fos.getChannel().transferFrom(inputChannel, 0, inputChannel.size());
+            javaRunningFileInputStream.close();
+            inputChannel.close();
+            fos.close();
+            //复制装饰部分完毕
+            File[] files = new File[]{new File(codeDir, "Main.java"), copiedFile};
+            DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();//收集错误信息
+            StandardJavaFileManager manager = compiler.getStandardFileManager(diagnostics, null, null);
+            Iterable<? extends JavaFileObject> compilation = manager.getJavaFileObjectsFromFiles(Arrays.asList(files));
+            compiler.getTask(null, manager, diagnostics, null, null, compilation).call();
+            manager.close();
+            if (diagnostics.getDiagnostics().size() > 0) {
+                StringBuilder sb = new StringBuilder();
+                for (Diagnostic d : diagnostics.getDiagnostics()) {
+                    sb.append("错误发生在第");
+                    sb.append(d.getLineNumber());
+                    sb.append("行：");
+                    sb.append(d.getMessage(null));
+                    sb.append("\r\n");
+                }
+                //编译错误
+                return new State(0, 0, 0, 0, 1, sb.toString());
             }
-            //编译错误
-            return new State(0, 0, 0,0,1,sb.toString());
+            return new State(0, 0, 0, 0, 0, "");//submitId t m state info
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        return new State(0, 0, 0,0,0,"");//submitId t m state info
     }
 
     @Override

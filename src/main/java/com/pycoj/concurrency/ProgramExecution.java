@@ -15,9 +15,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by Heyman on 2017/6/14.
  */
 public class ProgramExecution implements Runnable {
-    private String codeDirPrefix;
+    private static final Logger log=Logger.getLogger(ProgramExecution.class);
+    private File codeDirPrefix;
     private String codeDir;
-    private String questionDir;
+    private File questionDir;
     private int id;//question id
     private Program program;
     private SubmitDao submitDao;
@@ -35,7 +36,7 @@ public class ProgramExecution implements Runnable {
      * @param submitDao 持久层接口
      * @param submitInfo 提交用户id
      */
-    public ProgramExecution(String codeDirPrefix, String codeDir, String questionDir, int id, Program program, SubmitDao submitDao, CoderDao coderDao, QuestionDao questionDao, Submit submitInfo) {
+    public ProgramExecution(File codeDirPrefix, String codeDir, File questionDir, int id, Program program, SubmitDao submitDao, CoderDao coderDao, QuestionDao questionDao, Submit submitInfo) {
         this.codeDirPrefix = codeDirPrefix;
         this.codeDir=codeDir;
         this.questionDir = questionDir;
@@ -49,10 +50,9 @@ public class ProgramExecution implements Runnable {
 
     public void run() {
         try {
-            State compileResult=program.compile(new File(codeDirPrefix+id+"/"+codeDir));//prefix / id / dir
-            submitDao.saveSubmit(submitInfo);
+            State compileResult=program.compile(new File(new File(codeDirPrefix, String.valueOf(id)),codeDir));//prefix / id / dir
             if (compileResult.getState()==0) {//编译成功
-                submitInfo.setStates(program.run(codeDirPrefix+id+"/"+codeDir,questionDir,id));
+                submitInfo.setStates(program.run(codeDirPrefix.getAbsolutePath()+"/"+id+"/"+codeDir,questionDir.getAbsolutePath(),id));
             }else{//编译失败
                 submitInfo.setStates(new State[]{compileResult});
             }
@@ -66,6 +66,7 @@ public class ProgramExecution implements Runnable {
                 }
             }
             submitInfo.setAc(success);
+            submitDao.saveSubmit(submitInfo);
             if (success){//全部用例都AC了
                 int submitCount=submitDao.selectCountSubmitByCoderIdAndQuestionId(submitInfo.getCoderId(),id);
                 if (submitCount==0){
@@ -77,6 +78,7 @@ public class ProgramExecution implements Runnable {
             }
             submitDao.saveState(submitInfo);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

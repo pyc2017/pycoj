@@ -1,7 +1,7 @@
 package com.pycoj.controller;
 
-import com.pycoj.entity.Question;
-import com.pycoj.entity.QuestionState;
+import com.pycoj.entity.*;
+import com.pycoj.service.MatchService;
 import com.pycoj.service.QuestionService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,8 +23,8 @@ public class QuestionController {
     private static Logger log=Logger.getLogger(QuestionController.class);
 
     @Autowired private QuestionState state;
-    @Autowired private Question question;
     @Autowired @Qualifier("qService") private QuestionService service;
+    @Autowired private MatchService mService;
 
     /**
      * 根据页码返回对应的题目
@@ -83,5 +83,53 @@ public class QuestionController {
         log.info("{ Admin start creating question:\ntitile:"+_q.getTitle()+" description:"+_q.getDescription()+"\ninput file:"+zip.getOriginalFilename()+"}");
         service.newQuestion(_q,zip);
         return "index";
+    }
+
+    /**
+     * 向比赛中新建题目
+     * @param _q
+     * @param zip
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "/newMatchQuestion",method = RequestMethod.POST)
+    public String newMatchQuestion(MatchQuestion _q,
+                                   @RequestParam("zip")MultipartFile zip,
+                                   HttpSession session) throws IOException {
+        Coder coder=(Coder)session.getAttribute("coder");
+        if (coder==null || !mService.checkCreator(_q.getMatchId(),coder.getId())){
+            return "redirect:/login/";
+        }
+        service.newMatchQuestion(_q,zip);
+        return "redirect:/match/index?match="+_q.getMatchId();
+    }
+
+    @RequestMapping(value = "/match/question",method = RequestMethod.GET)
+    @ResponseBody
+    public Dto<List<MatchQuestion>> getMatchQuestions(@RequestParam("m")int id,
+                                                      HttpSession session){
+        Integer current= (Integer) session.getAttribute("currentMatch");
+        if (current==null||current!=id){
+            return new Dto(null,false,"access denied");
+        }else{
+            return service.showMatchQuestions(id);
+        }
+    }
+
+    /**
+     * 用户查询自己在本次比赛中已完成的题目
+     * @param matchId
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "/match/solved",method = RequestMethod.GET)
+    @ResponseBody
+    public Dto<Integer[]> coderGetSolvedQuestionList(@RequestParam("mid")int matchId,
+                                                HttpSession session){
+        Coder coder= (Coder) session.getAttribute("coder");
+        if (coder==null){
+            return new Dto<>(null,false,"access denied");
+        }
+        return new Dto(service.getSolvedQuestionsInMatch(matchId,coder.getId()),true,"");
     }
 }

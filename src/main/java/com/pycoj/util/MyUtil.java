@@ -1,5 +1,8 @@
 package com.pycoj.util;
 
+import com.pycoj.entity.Coder;
+
+import javax.servlet.http.HttpSession;
 import java.util.Random;
 
 /**
@@ -29,5 +32,9 @@ public class MyUtil {
             sb.append(characters[rand.nextInt(length)]);
         }
         return sb.toString();
+    }
+
+    public static Coder getCurrentCoder(HttpSession session){
+        return (Coder) session.getAttribute("coder");
     }
 }

@@ -31,4 +31,14 @@ public class IndexController {
         session.removeAttribute("coder");
         return "redirect:/index/";
     }
+
+    @RequestMapping(value = "/match",method = RequestMethod.GET)
+    public String match(HttpSession session){
+        Integer id= (Integer) session.getAttribute("currentMatch");
+        if (id==null) {
+            return "match_entry";
+        }else{
+            return "redirect:/match/index?match="+id;
+        }
+    }
 }

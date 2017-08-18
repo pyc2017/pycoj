@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pycoj.dao.MatchDao">
+    <insert id="save" parameterType="com.pycoj.entity.Match" useGeneratedKeys="true" keyProperty="match.id">
+        INSERT INTO `oj_match`(password,start_time,end_time,creator,`name`) VALUES(#{match.password},#{match.startTime},#{match.endTime},#{match.creator},#{match.name})
+    </insert>
+    <select id="selectMatchByIdAndPassword" resultType="com.pycoj.entity.Match">
+        SELECT * FROM oj_match WHERE id=#{id} AND password=#{password}
+    </select>
+    <select id="selectMatchById" resultType="com.pycoj.entity.Match">
+        SELECT * FROM oj_match WHERE id=#{id}
+    </select>
+</mapper>

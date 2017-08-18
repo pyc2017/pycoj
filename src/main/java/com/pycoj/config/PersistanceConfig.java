@@ -71,8 +71,13 @@ public class PersistanceConfig {
      * @return 存储用户上传的代码的文件夹
      */
     @Bean("program")
-    public String program(){
-        return properties().getProperty("program");
+    public File program(){
+        return new File(properties().getProperty("program"));
+    }
+
+    @Bean("matchProgramDir")
+    public File matchProgramDir(){
+        return new File(properties().getProperty("matchProgram"));
     }
 
     /**
@@ -80,8 +85,13 @@ public class PersistanceConfig {
      * @return
      */
     @Bean("questionDir")
-    public String questionDir(){
-        return properties().getProperty("question");
+    public File questionDir(){
+        return new File(properties().getProperty("question"));
+    }
+
+    @Bean("matchQuestionDir")
+    public File matchQuestionDir(){
+        return new File(properties().getProperty("matchQuestion"));
     }
 
     @Bean("javaRunningFile")

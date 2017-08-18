@@ -7,6 +7,9 @@
         FROM `question`
         LIMIT #{start},20
     </select>
+    <select id="selectMatchQuestions" resultType="com.pycoj.entity.MatchQuestion">
+        SELECT * FROM `match_question` WHERE match_id=#{id}
+    </select>
     <select id="selectAmountOfQuestions" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM `question`
@@ -16,11 +19,20 @@
         FROM `question`
         WHERE id=#{id}
     </select>
+    <select id="checkQuestionAndMatch" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM `match_question` WHERE id=#{questionId} AND match_id=#{matchId}
+    </select>
+    <select id="selectMatchQuestionWhichAcIsZeroWithMatchIdAndCoderId" resultType="java.lang.Integer">
+        SELECT DISTINCT question_id FROM match_submit WHERE match_id=#{matchId} AND coder_id=#{coderId} AND ac=0
+    </select>
     <insert id="save" parameterType="com.pycoj.entity.Question" useGeneratedKeys="true" keyProperty="question.id">
         INSERT INTO `question`
         (`title`,`tag`,`description`,`input`,`output`,`hint`)
         VALUES
         (#{question.title},#{question.tag},#{question.description},#{question.input},#{question.output},#{question.hint})
+    </insert>
+    <insert id="save2" parameterType="com.pycoj.entity.MatchQuestion" useGeneratedKeys="true" keyProperty="question.id">
+        INSERT INTO `match_question`(`title`,`match_id`,`description`,`hint`,`input`,`output`) VALUES (#{question.title},#{question.matchId},#{question.description},#{question.hint},#{question.input},#{question.output})
     </insert>
     <update id="updateAddSubmit">
         UPDATE `question` SET submit=submit+1 WHERE id=#{id};

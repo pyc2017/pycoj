@@ -19,6 +19,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
@@ -36,6 +37,7 @@ public class DaoTest {
     private QuestionDao questionDao;
     @Autowired private SubmitDao submitDao;
     @Autowired private CommentDao commentDao;
+    @Autowired @Qualifier("matchQuestionDir") private File matchQuestionDir;
 
     @Test
     public void checkUsernameExistTest(){
@@ -66,7 +68,7 @@ public class DaoTest {
 
     @Test
     public void selectQuestionTest(){
-        Question q=questionDao.selectQuestionByID(57);
+        Question q=questionDao.selectQuestionByID(1);
     }
 
     @Test
@@ -81,6 +83,19 @@ public class DaoTest {
         List<Comment> comments=commentDao.selectCommentsByQuestionId(1);
         for (Comment c:comments){
             System.out.println(c.getCoder().getNickname()+","+c.getCoder().getHeadImage());
+        }
+    }
+
+    @Test
+    public void fileTest(){
+        System.out.println(matchQuestionDir.getAbsoluteFile());
+    }
+
+    @Test
+    public void selectMatchQuestionWhichAcIsZeroWithMatchIdAndCoderIdTest(){
+        Integer[] array=questionDao.selectMatchQuestionWhichAcIsZeroWithMatchIdAndCoderId(3,3);
+        for (int i=0;i<array.length;i++){
+            System.out.println(array[i]);
         }
     }
 }

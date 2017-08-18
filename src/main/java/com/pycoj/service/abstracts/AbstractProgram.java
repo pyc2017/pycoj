@@ -45,8 +45,8 @@ public abstract class AbstractProgram implements Program{
     }
 
     public State[] run(String codeDir, String questionDir, int id) throws Exception{
-        InputStream[] inputFileStream=getInput(questionDir+id);
-        InputStream[] outputFileStream=getOutput(questionDir+id);
+        InputStream[] inputFileStream=getInput(questionDir+"/"+id);
+        InputStream[] outputFileStream=getOutput(questionDir+"/"+id);
         State[] resultStates=new State[inputFileStream.length];
 
         //开始执行子进程

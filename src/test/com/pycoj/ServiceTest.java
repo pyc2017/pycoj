@@ -13,6 +13,7 @@ import org.springframework.mail.MailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -28,6 +29,8 @@ public class ServiceTest {
     @Autowired private CommentService commentService;
     @Autowired private RedisService rService;
     @Autowired @Qualifier("javaProgram") private Program javaProgram;
+    @Autowired @Qualifier("questionDir") private File questionDir;
+    @Autowired @Qualifier("program") private File filePrefix;
 
     @Test
     public void selectCoderTest(){
@@ -38,16 +41,17 @@ public class ServiceTest {
     }
 
     @Test
-    public void runProgramTest() throws Exception {
-        State[] states=javaProgram.run("E:\\ojprogram\\1\\TYDYHC7mUXguMZHHVBdeua8Oo5ixie34","E:\\ojquestion\\",1);
-        for (State s:states){
-            System.out.println(s.toString());
+    public void runProgramTest(){
+        try {
+            service2.runSolution(filePrefix,questionDir,1,"z148fO8XaEUNZLaIUY7iR4ynlBcJjaC1",javaProgram,1);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Test
     public void compileJavaProgramTest() throws IOException {
-        State state=javaProgram.compile(new java.io.File("E:\\ojprogram\\1\\Aq5f2UaBm7PVbPqtMJquLuZrLlYGZY5j"));
+        State state=javaProgram.compile(new File(filePrefix,1+"/"+"z148fO8XaEUNZLaIUY7iR4ynlBcJjaC1"));
         System.out.println(state.toString());
     }
 

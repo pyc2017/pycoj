@@ -46,7 +46,6 @@
                     <input type="file" id="zip" name="zip">
                     <p class="help-block">Example block-level help text here.</p>
                 </div>
-                <input type="hidden" name="accessable" value="true">
                 <button type="submit" class="btn btn-default" id="submit">Submit</button>
             </form>
         </div>
@@ -55,6 +54,13 @@
 </div>
 <script>
     $(document).ready(function () {
+        var s;
+        if ((s=window.location.search)!==""){
+            var reg=new RegExp("(^|&)m=([^&]*)(?=(&|$))");
+            var id=s.substring(1).match(reg)[0].substring(2);
+            $("form").attr("action","/newMatchQuestion");
+            $("form").append('<input type="hidden" name="matchId" value="'+id+'">');
+        }
     })
 </script>
 </body>

@@ -1,36 +1,16 @@
 package com.pycoj.entity;
 
-import org.springframework.stereotype.Component;
-
 /**
- * Created by Heyman on 2017/5/4.
+ * Created by 潘毅烦 on 2017/8/7.
  */
-@Component
-public class Question {
+public class MatchQuestion {
     private int id;
+    private int matchId;
     private String title;
     private String description;
-    private int submit;
-    private String tag;
     private String input;
     private String output;
     private String hint;
-
-    public String getInput() {
-        return input;
-    }
-
-    public void setInput(String input) {
-        this.input = input;
-    }
-
-    public String getOutput() {
-        return output;
-    }
-
-    public void setOutput(String output) {
-        this.output = output;
-    }
 
     public String getHint() {
         return hint;
@@ -40,28 +20,20 @@ public class Question {
         this.hint = hint;
     }
 
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public int getSubmit() {
-        return submit;
-    }
-
-    public void setSubmit(int submit) {
-        this.submit = submit;
-    }
-
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getMatchId() {
+        return matchId;
+    }
+
+    public void setMatchId(int matchId) {
+        this.matchId = matchId;
     }
 
     public String getTitle() {
@@ -78,5 +50,21 @@ public class Question {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
     }
 }

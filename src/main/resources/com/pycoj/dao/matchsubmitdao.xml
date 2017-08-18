@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pycoj.dao.MatchSubmitDao">
+    <select id="selectMatchSubmitsByMatchId" resultType="com.pycoj.entity.RankObject">
+        SELECT ms.question_id,ms.ac,ms.submit_time,coder.username FROM match_submit ms INNER JOIN coder ON coder.id=ms.coder_id WHERE ms.match_id=#{matchId}
+        UNION
+        SELECT 0,0,start_time,'' FROM oj_match WHERE id=#{matchId}
+    </select>
+    <insert id="save">
+        INSERT INTO match_submit(`coder_id`,`question_id`,`ac`,`submit_time`,`match_id`) VALUES(#{matchSubmit.coderId},#{matchSubmit.questionId},#{matchSubmit.ac},#{matchSubmit.submitTime},#{matchSubmit.matchId})
+    </insert>
+</mapper>

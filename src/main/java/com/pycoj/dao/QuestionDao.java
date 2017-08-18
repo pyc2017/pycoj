@@ -1,5 +1,6 @@
 package com.pycoj.dao;
 
+import com.pycoj.entity.MatchQuestion;
 import com.pycoj.entity.Question;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -19,11 +20,25 @@ public interface QuestionDao {
     public List<Question> selectQuestions(@Param("start")int start);
 
     /**
+     * 根据比赛id查询对应的题目
+     * @param id
+     * @return
+     */
+    public List<MatchQuestion> selectMatchQuestions(@Param("id")int id);
+
+    /**
      * 添加题目
      * @param question
      * @return
      */
     public boolean save(@Param("question")Question question);
+
+    /**
+     * 新增某一个比赛的题目
+     * @param question
+     * @return
+     */
+    public boolean save2(@Param("question")MatchQuestion question);
 
     /**
      * 获取题目的总数
@@ -39,4 +54,14 @@ public interface QuestionDao {
      * @return
      */
     public boolean updateAddSubmit(@Param("id")int id);
+
+    /**
+     * 查询比赛id与问题id是否相对应
+     * @param matchId
+     * @param questionId
+     * @return
+     */
+    public int checkQuestionAndMatch(@Param("matchId")int matchId,@Param("questionId")int questionId);
+
+    public Integer[] selectMatchQuestionWhichAcIsZeroWithMatchIdAndCoderId(@Param("matchId")int matchId,@Param("coderId")int coderId);
 }
