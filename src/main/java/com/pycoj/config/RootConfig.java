@@ -29,7 +29,7 @@ import java.util.concurrent.*;
  */
 @Configuration
 @Import({RedisConfig.class,PersistanceConfig.class})
-@ComponentScan(basePackages = {"com.pycoj.entity","com.pycoj.service"})
+@ComponentScan(basePackages = {"com.pycoj.entity","com.pycoj.service","com.pycoj.websocket"})
 public class RootConfig {
     private final static String host="smtp.163.com";
     private static final String emailAccount="losangels03@163.com";

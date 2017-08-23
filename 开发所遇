@@ -4,3 +4,45 @@
 2017.07.18
 解决了c程序的计时问题，但是在线下计时，对于一个n为1700+的快排计时为50ms左右，在服务器运行提交上来的程序则变成0。需要在日后编写一个时间复杂度比较高的程序再测试一下。
 遇到问题：网站的设计，到底需不需要删除之前的提交记录（当前情况为删除，因为查询的时候可能会导致查询上一次的提交结果而不是当前提交的结果），不想进行删除，因为这样会导致数据库state表、submit表增删频繁，而且不是使用主键删除，可能会造成锁表的情况。如果不删除之前的提交记录，应该想一个办法去解决新一次提交却查到的是上一次查询结果的问题。
+解决方法：去除删除功能，将子线程中的Submit的插入操作转到生成子线程前，然后返回这个Submit id给前端用于查询。对于submit表，可以建立coder_id,question_id索引用于查询最近一次的提交情况（覆盖索引），然后根据获取的submit id去查看state表中对应的行。在测试这个索引的效果时，创建了一个有1W条数据的test表(id,coderid,questionid)，对于语句：SELECT MAX(id) FROM `test` WHERE coderid=? AND questionid=? 使用explain分析得出，在Extra列中，写着Select tables optimized away的内容，表示Mysql可以直接获取行，已经是最优解了。
+2017.8.15
+遇到问题：对于match_submit表，建立了索引`idx_match_submit_coder_question`(coder_id,question_id)索引，在比赛过程的查询排名功能中，我打算将该次比赛的所有提交结果返回前端，然后再在客户端进行计算。但是对于该次查询，用到的表有coder（主要是用来获取coder的username，在查询中性能比较好，因为使用explain语句可以知道对于coder表的查询是使用了主键）、match_question（主要是根据比赛的id获取所有问题的id）、match_submit表。对于该语句的查询：
+SELECT
+          `c`.`username` AS `username`,`ms`.`question_id` AS `questionId`,`ms`.`ac` AS `ac`,`ms`.`submit_time` AS `submitTime`
+        FROM
+          match_question AS `mq` LEFT JOIN match_submit AS `ms` ON `mq`.id=`ms`.question_id
+          INNER JOIN coder AS `c` ON `ms`.coder_id=`c`.id
+        WHERE `mq`.`match_id`=#{matchId}
+MySQL给出的结果是match_submit表的查询并没有使用到任何索引。但是查询比赛的排名在比赛的过程中是一个比较频繁的操作，如果ms表的这个查询没有用到任何索引会造成查询性能效率低的问题。
+mysql> explain SELECT
+    ->           `c`.`username` AS `username`,`ms`.`question_id` AS `questionId`,`ms`.`ac` AS `ac`,`ms`.`submit_time` AS `submitTime`
+    ->         FROM
+    ->           match_question AS `mq` LEFT JOIN match_submit AS `ms` ON `mq`.id=`ms`.question_id
+    ->           INNER JOIN coder AS `c` ON `ms`.coder_id=`c`.id
+    ->         WHERE `mq`.`match_id`=3;
++----+-------------+-------+------------+--------+-------------------------------------+-----------------------------+---------+----------------+------+----------+----------------------------------------------------+
+| id | select_type | table | partitions | type   | possible_keys                       | key                         | key_len | ref            | rows | filtered | Extra                                              |
++----+-------------+-------+------------+--------+-------------------------------------+-----------------------------+---------+----------------+------+----------+----------------------------------------------------+
+|  1 | SIMPLE      | mq    | NULL       | ref    | PRIMARY,idx_match_question_match_id | idx_match_question_match_id | 5       | const          |    6 |   100.00 | Using index                                        |
+|  1 | SIMPLE      | ms    | NULL       | ALL    | idx_match_submit_coder_question     | NULL                        | NULL    | NULL           |   22 |    10.00 | Using where; Using join buffer (Block Nested Loop) |
+|  1 | SIMPLE      | c     | NULL       | eq_ref | PRIMARY                             | PRIMARY                     | 4       | oj.ms.coder_id |    1 |   100.00 | Using where                                        |
++----+-------------+-------+------------+--------+-------------------------------------+-----------------------------+---------+----------------+------+----------+----------------------------------------------------+
+如果对question_id字段单独再（之前的联合索引coder,question不删除）建立索引，性能解析如下：
++----+-------------+-------+------------+------+-----------------------------------------------------------+-----------------------------+---------+----------+------+----------+----------------------------------------------------+
+| id | select_type | table | partitions | type | possible_keys                                             | key                         | key_len | ref      | rows | filtered | Extra                                              |
++----+-------------+-------+------------+------+-----------------------------------------------------------+-----------------------------+---------+----------+------+----------+----------------------------------------------------+
+|  1 | SIMPLE      | mq    | NULL       | ref  | PRIMARY,idx_match_question_match_id                       | idx_match_question_match_id | 5       | const    |    6 |   100.00 | Using index                                        |
+|  1 | SIMPLE      | ms    | NULL       | ref  | idx_match_submit_coder_question,idx_match_submit_question | idx_match_submit_question   | 5       | oj.mq.id |    3 |   100.00 | NULL                                               |
+|  1 | SIMPLE      | c     | NULL       | ALL  | PRIMARY                                                   | NULL                        | NULL    | NULL     |    5 |    20.00 | Using where; Using join buffer (Block Nested Loop) |
++----+-------------+-------+------------+------+-----------------------------------------------------------+-----------------------------+---------+----------+------+----------+----------------------------------------------------+
+这个方法在网站用户量比较大的情况下会出现性能问题，因为第三个表使用了BNL算法。
+解决方法：该方法比较简单，增加数据冗余，对match_submit表增加coder_username字段，并且删除对coder表的连接查询。
+突然想到一个新的方法，对match_submit增加match_id列，伤处coder_username字段，毕竟int型总比String型的数据空间节省，并且完全修改对该表的索引。
+增加match_submit表在match_id上的索引，只是用match_submit,coder进行连接查询，但是改写后的查询也是没有使用到新建的match_id上的索引。原因是因为数据量太少了，该表中的所有match_id都为同一个值，增加不同值的行后就使用了索引，由此猜想上面的SQL语句是否是因为数据量不足，等待程序进行测试的时候再回头看看上面的语句是否能够使用索引。
+.....原来出现不使用索引的原因是因为该索引项的数据只有一个（就是说开发阶段的数据量太少了，MySQL选择全表扫描也不使用索引。。。。。。）
+由于之前也有一个查询（查某一次比赛某一名coder的所有ac题目的id），所以将该表的索引再修改一下，修改为idx_match_submit_match_coder(match_id,coder_id)
+
+2017.08.20
+采用@ServerEndpoint方法进行websocket编程，但是无法获取到HttpSession对象保存的信息。上网查到采用继承ServerEndpointConfig.Configurator的方法，并且重写握手代码，发现握手方法参数可以获取HttpSession但是HttpSession与websocket.session的id不一致。
+解决方法：在握手的时候在response头部添加参数，然后客户端再次发送一次消息来服务器，服务器再保存相关信息。实际上执行起来也不行，不知道websocket在前端如何获取握手header.
+解决方法二：想了一下，该业务其实无需知道用户id以及对应websocket session，只需要将某一个比赛的所有session保存在一个List中而不是map。考虑到可能会同时有多个用户进入比赛，将map改为ConcurrentHashMap

@@ -148,3 +148,13 @@ var rank=function () {
         }
     })
 }
+var websocket=function () {
+    var socket=new WebSocket('ws://'+window.location.host+'/match/1');
+    socket.onopen=function(event){
+        console.log('open')
+        console.log(event)
+    };
+    socket.onmessage=function () {
+
+    };
+}
