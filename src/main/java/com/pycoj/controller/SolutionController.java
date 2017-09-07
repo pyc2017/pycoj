@@ -41,19 +41,27 @@ public class SolutionController {
      * @throws Exception
      */
     @RequestMapping(value="/submit/{id}",method = RequestMethod.POST)
-    @ResponseBody public int  userSolveQuestion(@RequestParam("code")String code,
+    @ResponseBody public boolean userSolveQuestion(@RequestParam("code")String code,
                                    @RequestParam("lang")int lang,
                                    @PathVariable int id,
                                    HttpSession session) throws Exception {
         Coder coder=(Coder) session.getAttribute("coder");
         if (coder==null){//需要重新返回
-            return -1;
+            return false;
         }
-        /*存储文件*/
-        String fileName=service.saveSolution(filePrefix,id,code,programs[lang]);
-        /*运行文件*/
-        service.runSolution(filePrefix,questionDir,id,fileName,programs[lang],coder.getId());
-        return coder.getId();
+        Long lastUploadTime= (Long) session.getAttribute("lastUpload");
+        if (lastUploadTime==null||System.currentTimeMillis()-lastUploadTime>15000) {
+            /*保存这次上传的时间*/
+            session.setAttribute("lastUpload",System.currentTimeMillis());
+            /*存储文件*/
+            String fileName = service.saveSolution(filePrefix, id, code, programs[lang]);
+            /*运行文件*/
+            service.runSolution(filePrefix, questionDir, id, fileName, programs[lang], coder.getId());
+            return true;
+        }else{
+            /*短时间内不能多次上传解决方案*/
+            return false;
+        }
     }
 
     /**
@@ -98,10 +106,20 @@ public class SolutionController {
         if (validateResult.isSuccess()==false){
             return validateResult;
         }
+        Long lastUploadTime= (Long) session.getAttribute("lastUpload");
+        if (lastUploadTime==null||System.currentTimeMillis()-lastUploadTime>15000) {
+            /*保存这次上传的时间*/
+            session.setAttribute("lastUpload", System.currentTimeMillis());
         /*存储文件*/
-        String fileName=service.saveSolution(matchProgramDir,questionId,code,programs[lang]);
+            String fileName = service.saveSolution(matchProgramDir, questionId, code, programs[lang]);
         /*运行文件*/
-        service.runMatchSolution(matchProgramDir,matchQuestionDir,questionId,fileName,programs[lang],coder.getId(),matchId);
-        return validateResult;
+            service.runMatchSolution(matchProgramDir, matchQuestionDir, questionId, fileName, programs[lang], coder.getId(), matchId);
+            return validateResult;
+        }else {
+            /*不允许短时间内大量上传解决方案*/
+            validateResult.setSuccess(false);
+            validateResult.setInfo("reject");
+            return validateResult;
+        }
     }
 }

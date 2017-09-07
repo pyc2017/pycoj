@@ -16,6 +16,7 @@
                 <h1>Match</h1>
             </div>
             <div class="form" id="login-form" style="padding-top:20px">
+                <h2>Enter a match!</h2>
                 <div class="form-group">
                     <div class="col-sm-10 has-feedback">
                         <input type="text" class="form-control" id="matchId" placeholder="Match ID" aria-describedby="matchIdStatus">
@@ -33,7 +34,7 @@
                 </div>
             </div>
             <div class="form" id="register-email-form"  style="padding-top:20px">
-                <h4>New a match!</h4>
+                <h2>New a match!</h2>
                 <div class="form-group">
                     <div class="col-sm-10">
                         <label for="matchName">Match Name</label>

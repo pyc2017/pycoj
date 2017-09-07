@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  *
  */
-@ServerEndpoint(value = "/match/{matchId}",configurator = SpringConfigurator.class)
+//@ServerEndpoint(value = "/match/{matchId}",configurator = SpringConfigurator.class)
 public class MatchInform {
     private static final Logger log=Logger.getLogger(MatchInform.class);
     public static Map<Integer,List<Session>> map=new ConcurrentHashMap<>();

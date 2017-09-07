@@ -15,10 +15,15 @@ import java.nio.channels.FileChannel;
 @Component("cProgram")
 public class CProgram extends AbstractProgram {
     @Autowired @Qualifier("cRunningFile") private File cRunningFile;
+
+    public CProgram(){
+        TIME_LIMIT=1000;
+    }
+
     @Override
     public State compile(File codeDir) throws IOException {
         //将main1.c拷贝到目标文件夹
-        FileInputStream cRunningFileInputStream=new FileInputStream(cRunningFile);
+    /*    FileInputStream cRunningFileInputStream=new FileInputStream(cRunningFile);
         FileChannel inputChannel=cRunningFileInputStream.getChannel();
         File copiedFile=new File(codeDir,"main1.c");
         copiedFile.createNewFile();//new file
@@ -26,12 +31,11 @@ public class CProgram extends AbstractProgram {
         fos.getChannel().transferFrom(inputChannel,0,inputChannel.size());//transfer
         cRunningFileInputStream.close();
         inputChannel.close();
-        fos.close();
+        fos.close();*/
         //复制装饰部分完毕
         try {
-            Process cProgramCompilationProcess=runtime.exec("cmd /c gcc -w -std=c99 -o main.exe main1.c",null,codeDir);
+            Process cProgramCompilationProcess=runtime.exec("cmd /c gcc -w -std=c99 -o main.exe main.c",null,codeDir);
             StringBuilder builder=new StringBuilder();
-            boolean state=false;
             new Thread(new ProcessInputStreamReader(cProgramCompilationProcess.getErrorStream(),builder)).start();
             cProgramCompilationProcess.waitFor();
             if (builder.length()!=0) {
@@ -47,7 +51,7 @@ public class CProgram extends AbstractProgram {
 
     @Override
     public final String getFileName() {
-        return "main.h";
+        return "main.c";
     }
 
     @Override

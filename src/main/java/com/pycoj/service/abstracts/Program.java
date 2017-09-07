@@ -1,6 +1,7 @@
 package com.pycoj.service.abstracts;
 
 import com.pycoj.entity.State;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,10 +26,11 @@ public interface Program {
      * @param codeDir 源代码的路径，不包括源代码名字
      * @param questionDir 问题的路径
      * @param id
+     * @param sendState 是否需要session发送每一个state
      * @return
      * @throws Exception
      */
-    public State[] run(String codeDir,String questionDir,int id) throws Exception;
+    public State[] run(String codeDir, String questionDir, int id, WebSocketSession session,boolean sendState) throws Exception;
 
     /**
      * 程序源代码的名字，java为Main.java，c为main.c，cpp为main.cpp

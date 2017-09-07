@@ -29,6 +29,7 @@ public class IndexController {
     @RequestMapping(value = "/logout/",method = RequestMethod.GET)
     public String logout(HttpSession session){
         session.removeAttribute("coder");
+        session.removeAttribute("currentMatch");
         return "redirect:/index/";
     }
 

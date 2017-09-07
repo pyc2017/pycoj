@@ -2,6 +2,9 @@ package com.pycoj.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pycoj.websocket.handler.MatchHandler;
+import com.pycoj.websocket.handler.SolutionHandler;
+import com.pycoj.websocket.interceptor.SolutionInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +17,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 import java.util.List;
 
@@ -22,8 +29,9 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
+@EnableWebSocket
 @ComponentScan(basePackages = {"com.pycoj.controller"})
-public class WebConfig extends WebMvcConfigurerAdapter{
+public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer{
     /**
      * 配置视图解释器
      * @return
@@ -72,5 +80,18 @@ public class WebConfig extends WebMvcConfigurerAdapter{
         converter.setObjectMapper(objectMapper);
         converters.add(converter);
         super.configureMessageConverters(converters);
+    }
+
+    /**
+     * websocket注册
+     * @param registry
+     */
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        WebSocketHandler handler=new SolutionHandler();
+        WebSocketHandler matchHandler=new MatchHandler();
+        SolutionInterceptor in=new SolutionInterceptor();
+        registry.addHandler(handler,"/normalSolution").addInterceptors(in);
+        registry.addHandler(matchHandler,"/match/*").addInterceptors(in);
     }
 }

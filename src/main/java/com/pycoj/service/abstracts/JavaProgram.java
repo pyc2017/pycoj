@@ -20,6 +20,10 @@ public class JavaProgram extends AbstractProgram {
     private static JavaCompiler compiler= ToolProvider.getSystemJavaCompiler();
     @Autowired @Qualifier("javaRunningFile") private File javaRunningFile;
 
+    public JavaProgram(){
+        this.TIME_LIMIT=2000;
+    }
+
     /**
      * 编译java文件
      * 已经可以编译源文件，需要优化
@@ -29,7 +33,7 @@ public class JavaProgram extends AbstractProgram {
     public State compile(File codeDir) {
         try {
             //将Main1.java拷贝到目标文件夹
-            FileInputStream javaRunningFileInputStream = new FileInputStream(javaRunningFile);
+        /*    FileInputStream javaRunningFileInputStream = new FileInputStream(javaRunningFile);
             FileChannel inputChannel = javaRunningFileInputStream.getChannel();
             File copiedFile = new File(codeDir, "Main1.java");
             copiedFile.createNewFile();
@@ -37,9 +41,9 @@ public class JavaProgram extends AbstractProgram {
             fos.getChannel().transferFrom(inputChannel, 0, inputChannel.size());
             javaRunningFileInputStream.close();
             inputChannel.close();
-            fos.close();
+            fos.close();*/
             //复制装饰部分完毕
-            File[] files = new File[]{new File(codeDir, "Main.java"), copiedFile};
+            File[] files = new File[]{new File(codeDir, "Main.java")};
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();//收集错误信息
             StandardJavaFileManager manager = compiler.getStandardFileManager(diagnostics, null, null);
             Iterable<? extends JavaFileObject> compilation = manager.getJavaFileObjectsFromFiles(Arrays.asList(files));
@@ -74,6 +78,6 @@ public class JavaProgram extends AbstractProgram {
 
     @Override
     public final String getExecutionCommand(String codeDir) {
-        return "cmd /c java -cp "+codeDir+" Main1";
+        return "cmd /c java -cp "+codeDir+" Main";
     }
 }

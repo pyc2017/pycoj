@@ -4,6 +4,10 @@ import com.pycoj.dao.MatchSubmitDao;
 import com.pycoj.entity.MatchSubmit;
 import com.pycoj.entity.State;
 import com.pycoj.service.abstracts.Program;
+import com.pycoj.websocket.handler.MatchHandler;
+import com.pycoj.websocket.handler.SolutionHandler;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,10 +34,15 @@ public class MatchProgramExecution implements Runnable {
     @Override
     public void run() {
         try{
+            /**
+             * websocket session对象，发送内容：
+             * state.toString() 发送state的内容，前端根据state的状态码判断状态
+             */
+            WebSocketSession session= MatchHandler.getMap().get(submitInfo.getMatchId()).get(submitInfo.getCoderId());//获取对应session
             State compileResult=program.compile(new File(new File(codeDirPrefix, String.valueOf(id)),codeDir));//prefix / id / dir
             if (compileResult.getState()==0) {//编译成功
                 //执行程序
-                State[] states=program.run(codeDirPrefix.getAbsolutePath()+"/"+id+"/"+codeDir,questionDir.getAbsolutePath(),id);
+                State[] states=program.run(codeDirPrefix.getAbsolutePath()+"/"+id+"/"+codeDir,questionDir.getAbsolutePath(),id,session,false);
                 //遍历返回的结果集，设置submitInfo相关信息
                 for (State s:states){
                     if (s.getState()!=0){
@@ -44,6 +53,7 @@ public class MatchProgramExecution implements Runnable {
             }else{//编译失败
                 submitInfo.setAc((short) 1);
             }
+            session.sendMessage(new TextMessage(submitInfo.toString()));
             //持久化本次解决方案的运行信息
             dao.save(submitInfo);
         } catch (IOException e) {

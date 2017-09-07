@@ -24,14 +24,10 @@ public class CProgramTest {
     @Autowired @Qualifier("cProgram") Program c;
     @Test
     public void compileTest() throws IOException {
-        System.out.println(c.compile(new File("E:\\ojprogram\\1\\ctest")).getState());
+        System.out.println(c.compile(new File("F:\\ojprogram\\1\\ctest")).getState());
     }
 
     @Test
     public void runTest() throws Exception {
-        State[] states=c.run("E:\\ojprogram\\1\\Y3ghiC4RKR7UgTX69Y6uZpwXFFOmb0RB","E:\\ojquestion\\",1);
-        for (State s:states){
-            System.out.println(s.getState()+":"+s.getTimeCost());
-        }
     }
 }

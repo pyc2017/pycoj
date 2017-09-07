@@ -3,12 +3,14 @@ package com.pycoj.service;
 import com.pycoj.dao.MatchDao;
 import com.pycoj.dao.QuestionDao;
 import com.pycoj.entity.*;
+import com.pycoj.websocket.MatchInform;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.websocket.Session;
 import java.io.*;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -108,6 +110,15 @@ public class QuestionService {
         targetZip.createNewFile();
         zip.transferTo(targetZip);
         unzip(targetZip,questionDir);
+        /**
+         * 发送消息到当前比赛中的用户
+         */
+        List<Session> list= MatchInform.map.get(question.getMatchId());
+        if (list!=null) {
+            for (Session s : list) {
+                s.getBasicRemote().sendText("1");
+            }
+        }
         return true;
     }
 

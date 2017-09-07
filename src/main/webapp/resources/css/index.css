@@ -67,13 +67,17 @@ select{
 }
 #example_zip_file{padding-left: 8px;}
 .form{
-    padding-top: 130px;
-    padding-left: 100px;
+    margin-left:auto;
+    margin-right:auto;
+    padding-top: 40px;
     width: 50%;
-    float: left;
 }
 .form input{
     width: 280px;
+}
+.form input:focus{
+    width: 320px;
+    height: 50px;
 }
 .form button{
     background-color: #F18860;
@@ -85,8 +89,9 @@ select{
     background-color: #F18860;
     border-color: #f0ad4e;
 }
-#register-email-form{
-    background:url(../img/bg-signin-divider.png) no-repeat;
+.form-horizontal .form-group{
+    margin-right: auto;
+    margin-left: auto;
 }
 a{
     color: #a9b5c0;
@@ -161,11 +166,30 @@ footer > div{
     background-color: #ffffff;
 }
 #accordion .success{
-    border:#3c763d 1px solid;background-color: #c5ffa9;box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
+    background-image: linear-gradient(to bottom,#dff0d8 0,#c8e5bc 100%);
+    border:#b2dba1 1px solid;
 }
 .tab-content{
     padding:0 10px 10px 10px;
 }
 #rankTable td{
     text-align:center;
+}
+#matchResult{
+    margin-top:20px;
+    margin-bottom:30px;
+}
+#finalResult{
+    animation: resultFloating 0.5s 1 linear;
+}
+@keyframes resultFloating {
+    0%{
+        transform: translateX(-100%);
+    }
+    50%{
+        transform: translateX(-50%);
+    }
+    100%{
+        transform: translateX(0%);
+    }
 }

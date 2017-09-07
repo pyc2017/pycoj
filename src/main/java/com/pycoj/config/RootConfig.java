@@ -151,8 +151,10 @@ public class RootConfig {
 
     @Bean
     public ExecutorService solutionsThreadPool(){
-        return new ThreadPoolExecutor(100,
-                100,
+    //    return Executors.newSingleThreadExecutor();
+        return new ThreadPoolExecutor(
+                4,
+                4,
                 Long.MAX_VALUE,
                 TimeUnit.MILLISECONDS,
                 new LinkedBlockingDeque<Runnable>());

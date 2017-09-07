@@ -6,7 +6,10 @@ import com.pycoj.dao.SubmitDao;
 import com.pycoj.entity.State;
 import com.pycoj.entity.Submit;
 import com.pycoj.service.abstracts.Program;
+import com.pycoj.websocket.handler.SolutionHandler;
 import org.apache.log4j.Logger;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -50,10 +53,17 @@ public class ProgramExecution implements Runnable {
 
     public void run() {
         try {
+            /**
+             * websocket session对象，发送内容：
+             * state.toString() 发送state的内容，前端根据state的状态码判断状态
+             */
+            WebSocketSession session= (WebSocketSession) SolutionHandler.getMap().get(submitInfo.getCoderId());//获取对应session
             State compileResult=program.compile(new File(new File(codeDirPrefix, String.valueOf(id)),codeDir));//prefix / id / dir
             if (compileResult.getState()==0) {//编译成功
-                submitInfo.setStates(program.run(codeDirPrefix.getAbsolutePath()+"/"+id+"/"+codeDir,questionDir.getAbsolutePath(),id));
+                submitInfo.setStates(program.run(codeDirPrefix.getAbsolutePath()+"/"+id+"/"+codeDir,questionDir.getAbsolutePath(),id,session,true));
             }else{//编译失败
+                if (session.isOpen())
+                    session.sendMessage(new TextMessage(compileResult.toString()));
                 submitInfo.setStates(new State[]{compileResult});
             }
             //查看是否全AC
@@ -77,6 +87,8 @@ public class ProgramExecution implements Runnable {
                 }
             }
             submitDao.saveState(submitInfo);
+            //服务器端主动关闭此次连接
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

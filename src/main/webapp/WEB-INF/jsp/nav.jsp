@@ -23,6 +23,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="<%=path%>/login/">登录</a></li>
                         <li><a href="<%=path%>/logout/">退出登录</a></li>
+                        <li><a href="/register_email/">注册</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="<%=path%>/uploadHeadImage">上传头像</a></li>
                     </ul>

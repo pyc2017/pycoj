@@ -4,18 +4,19 @@
     <script src="/resources/js/jquery-2.0.0.min.js"></script>
     <jsp:include page="boostrap.jsp"></jsp:include>
     <link href="/resources/css/index.css" rel="stylesheet" type="text/css">
+    <link href="/resources/css/loading.css" rel="stylesheet" type="text/css">
     <script src="/resources/js/match.js"></script>
     <title>Match</title>
 </head>
 <body>
     <jsp:include page="nav.jsp"></jsp:include>
     <div class="row">
-        <div class="col-md-2"></div>
+        <div class="col-md-2">
+        </div>
         <div class="col-md-8 container shadow">
-            <a href="/match/exit">Quit This Match<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-pills" role="tablist">
                 <li role="presentation" class="active"><a href="#matchQuestions" aria-controls="matchQuestions" role="tab" data-toggle="tab">Questions</a></li>
-                <li role="presentation"><a href="#rank" aria-controls="rank" role="tab" data-toggle="tab">Rank</a></li>
+                <li role="presentation"><a href="#rank" aria-controls="rank" role="tab" data-toggle="tab" onclick="rank(this,true)">Rank</a></li>
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="matchQuestions"><table class="table" id="questionslist"></table><div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"></div></div>
@@ -27,6 +28,11 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" id="matchResult"></div>
         <div class="col-md-2"></div>
     </div>
     <jsp:include page="foot.jsp"></jsp:include>
@@ -58,11 +64,19 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="submit()">Submit</button>
+                    <button type="button" class="btn btn-primary" onclick="submit()" disabled="disabled" id="submit">Submit</button>
                 </div>
             </div>
         </div>
     </div>
-    <script>$(document).ready(function(){checkCreator();getQuestion();rank();$(".nav .dropdown").mouseenter(function () {$(this).addClass("open");$(this).children("a").attr("aria-expanded","true");});$(".nav .dropdown").mouseleave(function () {$(this).removeClass("open");$(this).children("a").attr("aria-expanded","false");});})</script>
+    <script>
+        $(document).ready(function(){
+            checkCreator();
+            getQuestion();
+            websocket();
+            $(".nav .dropdown").mouseenter(function () {$(this).addClass("open");$(this).children("a").attr("aria-expanded","true");});
+            $(".nav .dropdown").mouseleave(function () {$(this).removeClass("open");$(this).children("a").attr("aria-expanded","false");});
+        })
+    </script>
 </body>
 </html>

@@ -3,7 +3,7 @@ package com.pycoj.entity;
 import java.sql.Timestamp;
 
 /**
- * Created by 潘毅烦 on 2017/8/12.
+ * 比赛中某一解决方案的完成情况
  */
 public class MatchSubmit {
     private int id;
@@ -59,5 +59,15 @@ public class MatchSubmit {
 
     public void setSubmitTime(Timestamp submitTime) {
         this.submitTime = submitTime;
+    }
+
+    /**
+     * 在websocket中传输结果使用，主要提供题目的id以及ac情况
+     * @return
+     */
+    @Override
+    public String toString(){
+        return "{\"q\":\""+questionId+"\","+
+                "\"ac\":"+ac+"}";
     }
 }
