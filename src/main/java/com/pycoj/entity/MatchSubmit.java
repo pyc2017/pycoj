@@ -12,6 +12,7 @@ public class MatchSubmit {
     private short ac;//0成功，1编译不成功，2超时，3超内存，4输出不正确
     private Timestamp submitTime;
     private int matchId;
+    private String username;
 
     public int getMatchId() {
         return matchId;
@@ -61,13 +62,27 @@ public class MatchSubmit {
         this.submitTime = submitTime;
     }
 
+    public void setUsername(String username){
+        this.username=username;
+    }
+
+    public String getUsername(){return username;}
     /**
      * 在websocket中传输结果使用，主要提供题目的id以及ac情况
      * @return
      */
     @Override
     public String toString(){
-        return "{\"q\":\""+questionId+"\","+
+        return "{\"q\":"+questionId+","+
                 "\"ac\":"+ac+"}";
+    }
+
+    public String toRedisString(){
+        return "{\"coderId\":"+coderId+","+
+                "\"username\":\""+username+"\","+
+                "\"questionId\":"+questionId+","+
+                "\"ac\":"+ac+","+
+                "\"submitTime\":\""+submitTime+"\","+
+                "\"matchId\":"+matchId+"}";
     }
 }

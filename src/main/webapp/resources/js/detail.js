@@ -107,11 +107,18 @@ var NormalSolutionWS=function (id) {
                 'lang':$('#lang').val()
             },
             success: function (d){
+                if (d==false){
+                    $('.states').empty();
+                    $('.states').append(
+                        '<div class="alert alert-danger alert-dismissable" role="alert">'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                        '<strong>Oops!</strong>Your request is illegal or you have solve this problem.The server will not accept any solution after you have been accepted.</div>');
+                }
+            },
+            beforeSend: function () {
                 $('.close').click();
                 $("a[href='#result']").click();
                 $('#state_refresh_button').click();
-            },
-            beforeSend: function () {
                 waiting();
             }
         });
@@ -128,11 +135,23 @@ var NormalSolutionWS=function (id) {
                 'ms&nbsp;'+
                 obj.m+
                 'kb</p></div>');
-        }else{
+        }else if (obj.state==1){
             $('.states').append('<div class="state-fail state well"><h4>CASE '+
                 count+
-                '</h4><pre>'+
+                ':Wrong Answer</h4><pre>'+
                 obj.info+'</pre>');
+        }else if (obj.state==2){
+            $('.states').append('<div class="state-fail state well"><h4>CASE '+
+                count+
+                ':Time Limited Error</h4>');
+        }else if (obj.state==3){
+            $('.states').append('<div class="state-fail state well"><h4>CASE '+
+                count+
+                ':Memory Limited Error</h4>');
+        }else if(obj.state==4){
+            $('.states').append('<div class="state-fail state well"><h4>CASE '+
+                count+
+                ':Wrong Answer</h4>');
         }
         count++;
     };

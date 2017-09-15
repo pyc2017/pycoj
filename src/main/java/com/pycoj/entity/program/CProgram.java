@@ -1,4 +1,4 @@
-package com.pycoj.service.abstracts;
+package com.pycoj.entity.program;
 
 import com.pycoj.concurrency.ProcessInputStreamReader;
 import com.pycoj.entity.State;
@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.nio.channels.FileChannel;
 
 /**
  * Created by Heyman on 2017/5/17.

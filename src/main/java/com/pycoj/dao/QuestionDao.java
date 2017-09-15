@@ -61,7 +61,7 @@ public interface QuestionDao {
      * @param questionId
      * @return
      */
-    public int checkQuestionAndMatch(@Param("matchId")int matchId,@Param("questionId")int questionId);
+    public int checkQuestionAndMatch(@Param("matchId")int matchId,@Param("questionId")int questionId,@Param("coderId") int coderId);
 
     public Integer[] selectMatchQuestionWhichAcIsZeroWithMatchIdAndCoderId(@Param("matchId")int matchId,@Param("coderId")int coderId);
 }

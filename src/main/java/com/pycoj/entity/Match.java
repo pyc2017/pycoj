@@ -60,4 +60,22 @@ public class Match {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Match(){}
+    public Match(int i){this.id=i;}
+
+    @Override
+    public boolean equals(Object match){
+        if (match instanceof Match){
+            return this==match||this.id==((Match) match).getId();
+        }else if (match instanceof Integer){
+            return ((Integer) match).intValue()==id;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode(){
+        return id;
+    }
 }

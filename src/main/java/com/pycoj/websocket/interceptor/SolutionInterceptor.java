@@ -1,7 +1,6 @@
 package com.pycoj.websocket.interceptor;
 
 import com.pycoj.entity.Coder;
-import org.apache.log4j.Logger;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;

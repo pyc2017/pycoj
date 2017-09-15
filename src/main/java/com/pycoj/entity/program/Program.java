@@ -1,4 +1,4 @@
-package com.pycoj.service.abstracts;
+package com.pycoj.entity.program;
 
 import com.pycoj.entity.State;
 import org.springframework.web.socket.WebSocketSession;
@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.nio.channels.FileChannel;
 
 /**
  * Created by Heyman on 2017/5/17.
@@ -41,16 +41,16 @@ public interface Program {
     public String getExecutionCommand(String codeDir);
 
     /**
-     * 获取题目的对应输入用例的输入流
+     * 获取题目的对应输入用例的输入通道
      * @param inputFileDir 输入用例所在路径
      * @return
      */
-    public InputStream[] getInput(String inputFileDir) throws FileNotFoundException;
+    public FileChannel[] getInput(String inputFileDir) throws FileNotFoundException;
 
     /**
-     * 获取题目对应的输出用例的输入流
+     * 获取题目对应的输出用例的输入通道
      * @param outputFileDir 输出用例所在路径
      * @return
      */
-    public InputStream[] getOutput(String outputFileDir) throws FileNotFoundException;
+    public FileChannel[] getOutput(String outputFileDir) throws FileNotFoundException;
 }

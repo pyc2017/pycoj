@@ -1,8 +1,5 @@
 package com.pycoj;
 
-import com.pycoj.entity.State;
-import com.pycoj.service.abstracts.JavaProgram;
-import com.pycoj.service.abstracts.Program;
 import org.junit.Test;
 
 /**

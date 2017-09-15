@@ -12,4 +12,11 @@ public interface MatchSubmitDao {
     public boolean save(@Param("matchSubmit")MatchSubmit matchSubmit);
 
     public List<RankObject> selectMatchSubmitsByMatchId(@Param("matchId")int matchId);
+
+    /**
+     * 保存list，用于redis转移数据到mysql
+     * @param list
+     * @return
+     */
+    public boolean saveList(@Param("list")List<MatchSubmit> list);
 }

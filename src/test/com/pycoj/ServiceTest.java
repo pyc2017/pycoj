@@ -4,7 +4,7 @@ import com.pycoj.config.RootConfig;
 import com.pycoj.entity.Coder;
 import com.pycoj.entity.State;
 import com.pycoj.service.*;
-import com.pycoj.service.abstracts.Program;
+import com.pycoj.entity.program.Program;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,9 @@ import org.springframework.mail.MailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /**
  * Created by Heyman on 2017/5/1.
@@ -29,8 +30,11 @@ public class ServiceTest {
     @Autowired private CommentService commentService;
     @Autowired private RedisService rService;
     @Autowired @Qualifier("javaProgram") private Program javaProgram;
+    @Autowired @Qualifier("cProgram") private Program cProgram;
     @Autowired @Qualifier("questionDir") private File questionDir;
     @Autowired @Qualifier("program") private File filePrefix;
+    @Autowired @Qualifier("matchQuestionDir") private File matchQuestionDir;
+    @Autowired @Qualifier("matchProgramDir") private File matchFilePrefix;
 
     @Test
     public void selectCoderTest(){
@@ -43,7 +47,11 @@ public class ServiceTest {
     @Test
     public void runProgramTest(){
         try {
-            service2.runSolution(filePrefix,questionDir,1,"z148fO8XaEUNZLaIUY7iR4ynlBcJjaC1",javaProgram,1);
+        //    service2.runSolution(matchFilePrefix,matchQuestionDir,26,"c_GxxvZuVzlmpqX0rDWpNZI9ggLhZkuB",cProgram,4);
+            State[] states=cProgram.run("F:\\matchprogram\\26\\c_GxxvZuVzlmpqX0rDWpNZI9ggLhZkuB",matchQuestionDir.getAbsolutePath(),-26,null,false);
+            for (State s:states){
+                System.out.println(s.toString());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

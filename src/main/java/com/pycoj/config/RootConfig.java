@@ -1,6 +1,5 @@
 package com.pycoj.config;
 
-import com.google.gson.Gson;
 import com.pycoj.service.EmailHandler;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.spring.ActiveMQConnectionFactory;

@@ -64,7 +64,15 @@ var submit=function () {
             'code':$('#code').val(),
             'lang':$('#lang').val()
         },
-        success:function(){},
+        success:function(d){
+            if (d.success==false){
+                $('#matchResult').empty();
+                $('#matchResult').append(
+                    '<div id="finalResult" class="alert alert-danger alert-dismissable" role="alert">'+
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                    '<strong>Oops!</strong>Your request is illegal or you have solve this problem.The server will not accept any solution after you have been accepted.</div>');
+            }
+        },
         beforeSend: function () {
             $('.close').click();$('#code').val('');waiting();
             $('#submit').attr('disabled','disabled');
@@ -149,7 +157,7 @@ var rank=function (ea,refresh) {
                         s=s%3600;
                         m=parseInt(s/60);
                         s=s%60;
-                        row+='<td class="success">'+h+':'+m+':'+s+'('+temp.times+')</td>'
+                        row+='<td class="success">'+h+':'+m+':'+s+'(-'+(temp.times-1)+')</td>'
                     }
                 }
                 row+='</tr>';
@@ -166,7 +174,6 @@ var websocket=function () {
     };
     socket.onmessage=function (d) {
         var acMessage=JSON.parse(d.data);/*反序列化*/
-        console.log(acMessage.ac);
         $('#matchResult').empty();
         switch (acMessage.ac){
             case 0:/*ac*/

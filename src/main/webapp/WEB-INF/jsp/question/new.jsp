@@ -5,7 +5,10 @@
 <head>
     <script src="<%=path%>/resources/js/jquery-2.0.0.min.js"></script>
     <jsp:include page="../boostrap.jsp"></jsp:include>
+    <link type="text/css" rel="stylesheet" href="/resources/css/fileinput.min.css">
     <link href="<%=path%>/resources/css/index.css" rel="stylesheet" type="text/css">
+    <script src="/resources/js/fileinput.min.js"></script>
+    <script src="/resources/js/fileinput_locale_zh.js"></script>
     <title>添加题目</title>
 </head>
 <body>
@@ -43,7 +46,7 @@
                 </div>
                 <div class="form-group">
                     <label for="zip">Zip File</label>
-                    <input type="file" id="zip" name="zip">
+                    <input type="file" id="zip" name="zip" class="projectfile">
                     <p class="help-block">Example block-level help text here.</p>
                 </div>
                 <button type="submit" class="btn btn-default" id="submit">Submit</button>
@@ -61,6 +64,29 @@
             $("form").attr("action","/newMatchQuestion");
             $("form").append('<input type="hidden" name="matchId" value="'+id+'">');
         }
+        var projectfileoptions = {
+            showUpload : false,
+            showRemove : false,
+            language : 'zh',
+            allowedPreviewTypes : [ 'image' ],
+            allowedFileExtensions : [ 'zip'],
+            maxFileSize : 2000
+        };
+        // 文件上传框
+        $('input[class="projectfile"]').each(function() {
+            var imageurl = $(this).attr("value");
+
+            if (imageurl) {
+                var op = $.extend({
+                    initialPreview : [ // 预览图片的设置
+                        "<img src='" + imageurl + "' class='file-preview-image'>", ]
+                }, projectfileoptions);
+
+                $(this).fileinput(op);
+            } else {
+                $(this).fileinput(projectfileoptions);
+            }
+        });
     })
 </script>
 </body>

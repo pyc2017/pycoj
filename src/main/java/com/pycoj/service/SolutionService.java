@@ -1,18 +1,18 @@
 package com.pycoj.service;
 
+import com.pycoj.concurrency.DataTransfer;
 import com.pycoj.concurrency.MatchProgramExecution;
 import com.pycoj.concurrency.ProgramExecution;
 import com.pycoj.dao.*;
 import com.pycoj.entity.*;
-import com.pycoj.service.abstracts.Program;
+import com.pycoj.entity.program.Program;
 import com.pycoj.util.MyUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,8 +20,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Heyman on 2017/5/17.
@@ -36,6 +37,12 @@ public class SolutionService implements DisposableBean{
     @Autowired private CoderDao coderDao;
     @Autowired private QuestionDao questionDao;
     @Autowired private ExecutorService fixedPool;
+    @Autowired private StringRedisTemplate template;
+    /**
+     * 懒加载
+     * 用于保存正在redis中存储代码结果的比赛对象
+     */
+    private Set<Match> set;
 
     /**
      * 用户上传代码
@@ -98,15 +105,34 @@ public class SolutionService implements DisposableBean{
         return submitInfo;
     }
 
-    public void runMatchSolution(File filePrefix,File questionDir,int id,String dirName,Program program,int coderId,int matchId){
+    public void runMatchSolution(File filePrefix,File questionDir,int id,String dirName,Program program,Coder coder,int matchId){
+        if (set==null){
+            synchronized (this){
+                if (set==null) {
+                    set = new HashSet<>();
+                    //运行监测比赛结果的线程，该线程用于将redis数据转移到mysql
+                    new Thread(new DataTransfer(set,matchSubmitDao,template)).start();
+                }
+            }
+        }
+        if (!set.contains(new Match(matchId))){
+            synchronized (set){
+                log.info("new match start,id:"+matchId);
+                Match newMatch=matchDao.selectMatchById(matchId);
+                set.add(newMatch);
+                //唤醒轮询的线程
+                set.notify();
+            }
+        }
         MatchSubmit submitInfo=new MatchSubmit();
         submitInfo.setQuestionId(id);
-        submitInfo.setCoderId(coderId);
+        submitInfo.setCoderId(coder.getId());
+        submitInfo.setUsername(coder.getUsername());
         submitInfo.setMatchId(matchId);
-        //设置提交时间，用于判断一血
+        //设置提交时间
         submitInfo.setSubmitTime(new Timestamp(System.currentTimeMillis()));
         fixedPool.execute(
-                new MatchProgramExecution(filePrefix,dirName,questionDir,id,program,submitInfo,matchSubmitDao)
+                new MatchProgramExecution(filePrefix,dirName,questionDir,program,submitInfo,template,matchSubmitDao)
         );
     }
 
@@ -121,8 +147,8 @@ public class SolutionService implements DisposableBean{
      * @param questionId
      * @return
      */
-    public Dto<Object> validateMatchInformation(Integer currentMatchId, int postMatchId, int questionId){
-        if (currentMatchId==null||currentMatchId!=postMatchId||questionDao.checkQuestionAndMatch(postMatchId,questionId)==0){
+    public Dto<Object> validateMatchInformation(Integer currentMatchId, int postMatchId, int questionId,int coderId){
+        if (currentMatchId==null||currentMatchId!=postMatchId||questionDao.checkQuestionAndMatch(postMatchId,questionId,coderId)==0){
             /**
              * 非法访问，因为当前比赛id与提交id不符合，或者该题目不属于该比赛
              */
@@ -140,6 +166,16 @@ public class SolutionService implements DisposableBean{
         }else{
             return new Dto<>(null,true,"");
         }
+    }
+
+    /**
+     * 验证一般题目是否已经ac
+     * @param questionId
+     * @param coderId
+     * @return 若已经ac，则返回false
+     */
+    public boolean validateNormalInformation(int coderId,int questionId){
+        return submitDao.selectCountSubmitByCoderIdAndQuestionId(coderId,questionId)==0;
     }
 
     @Override

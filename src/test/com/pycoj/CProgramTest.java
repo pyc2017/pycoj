@@ -1,10 +1,7 @@
 package com.pycoj;
 
-import com.pycoj.config.PersistanceConfig;
 import com.pycoj.config.RootConfig;
-import com.pycoj.entity.State;
-import com.pycoj.service.abstracts.CProgram;
-import com.pycoj.service.abstracts.Program;
+import com.pycoj.entity.program.Program;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +26,6 @@ public class CProgramTest {
 
     @Test
     public void runTest() throws Exception {
+
     }
 }

@@ -5,14 +5,13 @@ import com.pycoj.dao.QuestionDao;
 import com.pycoj.dao.SubmitDao;
 import com.pycoj.entity.State;
 import com.pycoj.entity.Submit;
-import com.pycoj.service.abstracts.Program;
+import com.pycoj.entity.program.Program;
 import com.pycoj.websocket.handler.SolutionHandler;
 import org.apache.log4j.Logger;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.File;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Heyman on 2017/6/14.

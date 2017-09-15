@@ -20,7 +20,11 @@
         WHERE id=#{id}
     </select>
     <select id="checkQuestionAndMatch" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM `match_question` WHERE id=#{questionId} AND match_id=#{matchId}
+        select
+          (select count(*) from match_question where id=#{questionId} and match_id=#{matchId}) AND
+          (select case
+            (select count(*) from match_submit where match_id=#{matchId} and coder_id=#{coderId} and question_id=#{questionId} and ac=0)
+            when 1 then 0 else 1 end)
     </select>
     <select id="selectMatchQuestionWhichAcIsZeroWithMatchIdAndCoderId" resultType="java.lang.Integer">
         SELECT DISTINCT question_id FROM match_submit WHERE match_id=#{matchId} AND coder_id=#{coderId} AND ac=0

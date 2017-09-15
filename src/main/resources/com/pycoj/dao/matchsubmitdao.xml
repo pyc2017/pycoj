@@ -10,4 +10,10 @@
     <insert id="save">
         INSERT INTO match_submit(`coder_id`,`question_id`,`ac`,`submit_time`,`match_id`) VALUES(#{matchSubmit.coderId},#{matchSubmit.questionId},#{matchSubmit.ac},#{matchSubmit.submitTime},#{matchSubmit.matchId})
     </insert>
+    <insert id="saveList" parameterType="java.util.List">
+        INSERT INTO match_submit(`coder_id`,`question_id`,`ac`,`submit_time`,`match_id`) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.coderId},#{item.questionId},#{item.ac},#{item.submitTime},#{item.matchId})
+        </foreach>
+    </insert>
 </mapper>

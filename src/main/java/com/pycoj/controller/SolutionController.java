@@ -3,15 +3,15 @@ package com.pycoj.controller;
 import com.pycoj.entity.Coder;
 import com.pycoj.entity.Dto;
 import com.pycoj.entity.State;
-import com.pycoj.entity.Submit;
 import com.pycoj.service.SolutionService;
-import com.pycoj.service.abstracts.CProgram;
-import com.pycoj.service.abstracts.JavaProgram;
-import com.pycoj.service.abstracts.Program;
+import com.pycoj.entity.program.Program;
+import com.pycoj.websocket.handler.SolutionHandler;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -21,6 +21,7 @@ import java.io.File;
  */
 @Controller
 public class SolutionController {
+    private static final Logger log=Logger.getLogger(SolutionController.class);
     @Autowired @Qualifier("sService") SolutionService service;
     @Autowired Program[] programs;
     /**
@@ -50,7 +51,10 @@ public class SolutionController {
             return false;
         }
         Long lastUploadTime= (Long) session.getAttribute("lastUpload");
-        if (lastUploadTime==null||System.currentTimeMillis()-lastUploadTime>15000) {
+        /**
+         * 短时间内未上传过并且未ac过才能编译运行
+         */
+        if ((lastUploadTime==null||System.currentTimeMillis()-lastUploadTime>15000)&&service.validateNormalInformation(coder.getId(),id)) {
             /*保存这次上传的时间*/
             session.setAttribute("lastUpload",System.currentTimeMillis());
             /*存储文件*/
@@ -60,12 +64,13 @@ public class SolutionController {
             return true;
         }else{
             /*短时间内不能多次上传解决方案*/
+            ((WebSocketSession) SolutionHandler.getMap().get(coder.getId())).close();
             return false;
         }
     }
 
     /**
-     * coder查询最近一次提交的结果
+     * coder查询最后一次提交的结果
      * @param id
      * @param session
      * @return
@@ -100,20 +105,21 @@ public class SolutionController {
         }
         Integer currentMatchId= (Integer) session.getAttribute("currentMatch");
         /**
-         * 对比赛、题目进行验证，防止没有比赛权限也可以提交代码
+         * 对比赛、题目进行验证，防止没有比赛权限也可以提交代码，同时对验证此次提交之前是否已经ac，若已ac，则拒绝
          */
-        Dto validateResult=service.validateMatchInformation(currentMatchId,matchId,questionId);
+        Dto validateResult=service.validateMatchInformation(currentMatchId,matchId,questionId,coder.getId());
         if (validateResult.isSuccess()==false){
             return validateResult;
         }
         Long lastUploadTime= (Long) session.getAttribute("lastUpload");
         if (lastUploadTime==null||System.currentTimeMillis()-lastUploadTime>15000) {
+            log.info("solving...");
             /*保存这次上传的时间*/
             session.setAttribute("lastUpload", System.currentTimeMillis());
-        /*存储文件*/
+            /*存储文件*/
             String fileName = service.saveSolution(matchProgramDir, questionId, code, programs[lang]);
-        /*运行文件*/
-            service.runMatchSolution(matchProgramDir, matchQuestionDir, questionId, fileName, programs[lang], coder.getId(), matchId);
+            /*运行文件*/
+            service.runMatchSolution(matchProgramDir, matchQuestionDir, questionId, fileName, programs[lang], coder, matchId);
             return validateResult;
         }else {
             /*不允许短时间内大量上传解决方案*/

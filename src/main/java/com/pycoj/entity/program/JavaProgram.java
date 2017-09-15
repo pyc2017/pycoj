@@ -1,4 +1,4 @@
-package com.pycoj.service.abstracts;
+package com.pycoj.entity.program;
 
 import com.pycoj.entity.State;
 import org.apache.log4j.Logger;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import javax.tools.*;
 import java.io.*;
-import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
 /**
