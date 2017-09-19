@@ -7,7 +7,6 @@ import com.pycoj.entity.MatchSubmit;
 import com.pycoj.entity.State;
 import com.pycoj.entity.program.Program;
 import com.pycoj.websocket.handler.MatchHandler;
-import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -23,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 
 public class MatchProgramExecution implements Runnable {
-    private static Logger log=Logger.getLogger(MatchProgramExecution.class);
     private File codeDirPrefix;
     private String codeDir;
     private File questionDir;
@@ -80,7 +78,6 @@ public class MatchProgramExecution implements Runnable {
              */
             template.execute(new RedisCallback<Boolean>() {
                 public Boolean doInRedis(RedisConnection redisConnection) throws DataAccessException {
-                    log.info("saving in redis");
                     RedisSerializer<String> serializer=template.getStringSerializer();
                     byte[] key=serializer.serialize(/*"match"+*/String.valueOf(submitInfo.getMatchId()));
                     byte[] value=serializer.serialize(submitInfo.toRedisString());

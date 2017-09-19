@@ -76,7 +76,6 @@ var submit=function () {
         beforeSend: function () {
             $('.close').click();$('#code').val('');waiting();
             $('#submit').attr('disabled','disabled');
-            /*测试阶段先注释，方便一个用户多次提交，测试并发量*/
             loop(20);
         }
     })
@@ -89,10 +88,11 @@ var rank=function (ea,refresh) {
         url:'/match/rank',type:'get',data:{'mid':getMatchId()},
         success:function(d){
             /*init*/
-            var length=d["data"].length;var start=d["data"][length-1]["submitTime"];length--;
+            var length=d["data"].length;var start=Math.floor(d["data"][length-1]["submitTime"]);length--;
             var QuestionInfo=function (times,score) {
                 this.times=times;
                 this.score=score;
+                this.hasAC=false;
             }
             var CoderInfo=function (name,score,ac,questionInfos) {
                 this.name=name;
@@ -100,28 +100,28 @@ var rank=function (ea,refresh) {
                 this.ac=ac;
                 this.questionInfos=questionInfos;
             }
-            var coderInfos=new Array();
-            var index=-1;
-            for (var i=0;i<length;i++){
-                var node=d.data[i];
-                if (coderInfos.length==0||coderInfos[index].name!=node.username){
-                    /*清点上一个人的完成信息*/
-                    for (var j=0;index>=0&&j<questionIds.length;j++){
-                        var final=coderInfos[index].questionInfos[questionIds[j]]==null?0:coderInfos[index].questionInfos[questionIds[j]].score;
-                        coderInfos[index].score+=final==0?0:20*(coderInfos[index].questionInfos[questionIds[j]].times-1)+final;
-                        if (final!=0){
-                            coderInfos[index].ac++;
-                        }
+            var coderMap={};//username ---> index
+            var coderInfos=new Array(),len=0;
+            for (var i=length-1;i>=0;i--){
+                var node=d.data[i],value,index;
+                if ((index=coderMap[node.username])==null){
+                    index=coderMap[node.username]=len;
+                    len++;
+                    coderInfos[index]=new CoderInfo(node.username,0,0,new Array());
+                }
+                value=coderInfos[index];
+                if (value.questionInfos[node.questionId]==null)
+                    value.questionInfos[node.questionId]=new QuestionInfo(0,0);
+                if (value.questionInfos[node.questionId].hasAC==true) continue;/*已经ac过了，以后的提交都不算入成绩*/
+                else{
+                    value.questionInfos[node.questionId].times++;//添加该用户在问题上的提交次数
+                    if (node.ac==0){
+                        value.questionInfos[node.questionId].hasAC=true;
+                        value.questionInfos[node.questionId].score=node.submitTime+1200000*(value.questionInfos[node.questionId].times-1)-start;
+                        value.score+=value.questionInfos[node.questionId].score;
+                        value.ac++;
                     }
-                    /*coder不同，需要新建一个个人完成信息*/
-                    coderInfos[++index]=new CoderInfo(node.username,0,0,new Array());
                 }
-                if (coderInfos[index].questionInfos[node.questionId]==null){
-                    coderInfos[index].questionInfos[node.questionId]=new QuestionInfo(0,0);
-                }
-                coderInfos[index].questionInfos[node.questionId].times++;/*添加完成次数*/
-                /*需要作修改，多次提交应该算最后一次ac，若有ac则后面提交失败也没有关系，应该在后台做一下处理，拒绝在ac后再次提交*/
-                coderInfos[index].questionInfos[node.questionId].score=node.ac==0?node.submitTime-start:0;/*多次提交算最后一次是否成功*/
             }
             /*sort*/
             for (var i=coderInfos.length;i>=0;i--){
@@ -142,22 +142,22 @@ var rank=function (ea,refresh) {
                 var row='<tr><td>'+coderInfos[i].name+'</td>';
                 for (var j=0;j<questionIds.length;j++){
                     var temp=coderInfos[i].questionInfos[questionIds[j]];
-                    if (temp==null){
+                    if (temp==null){/*没提交过*/
                        row+='<td>-</td>';
-                    }else if (temp.score==0){
+                    }else if (temp.hasAC==false){/*未ac*/
                         if (temp.times>0){
                             row+='<td class="danger">-'+temp.times+'</td>';
                         }else {
                             row += '<td>-</td>';
                         }
-                    }else{
+                    }else{/*ac*/
                         var s,h,m;
                         s=temp.score/1000;
                         h=parseInt(s/3600);
                         s=s%3600;
                         m=parseInt(s/60);
-                        s=s%60;
-                        row+='<td class="success">'+h+':'+m+':'+s+'(-'+(temp.times-1)+')</td>'
+                        s=Math.floor(s%60);
+                        row+='<td class="success">'+h+':'+m+':'+s+'</br>(-'+(temp.times-1)+')</td>'
                     }
                 }
                 row+='</tr>';

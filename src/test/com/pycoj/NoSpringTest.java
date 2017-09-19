@@ -3,6 +3,7 @@ package com.pycoj;
 import com.google.gson.Gson;
 import com.pycoj.entity.Match;
 import com.pycoj.entity.MatchSubmit;
+import com.pycoj.entity.RankObject;
 import com.pycoj.service.CommentService;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
@@ -41,9 +42,14 @@ public class NoSpringTest {
     public void jedisTest(){
         Jedis jedis=new Jedis("127.0.0.1",6379);
         List<String> list=jedis.lrange("14",0,100);
+        if (list==null||list.size()==0){
+            System.out.println("null");
+            return ;
+        }
         Gson gson=new Gson();
         for (String s:list){
-            System.out.println(gson.fromJson(s, MatchSubmit.class));
+            RankObject ro=gson.fromJson(s,RankObject.class);
+            System.out.println(ro.getQuestionId()+","+ro.getAc()+","+ro.getSubmitTime()+","+ro.getUsername());
         }
     }
 }

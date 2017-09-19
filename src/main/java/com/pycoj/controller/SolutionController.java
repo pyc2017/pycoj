@@ -128,4 +128,25 @@ public class SolutionController {
             return validateResult;
         }
     }
+
+    /**
+     * 压力测试接口
+     * @param code 提交代码
+     * @param lang 语言类型
+     * @param id 题目id
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/test/{id}",method = RequestMethod.POST)
+    @ResponseBody public boolean test(@RequestParam("code")String code,
+                                                   @RequestParam("lang")int lang,
+                                                   @PathVariable int id,
+                                                   HttpSession session) throws Exception {
+        /*存储文件*/
+        String fileName = service.saveSolution(filePrefix, id, code, programs[lang]);
+        /*运行文件*/
+        service.runSolution(filePrefix, questionDir, id, fileName, programs[lang], -1);
+        return true;
+    }
 }

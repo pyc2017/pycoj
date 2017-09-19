@@ -77,6 +77,7 @@ public class DataTransfer implements Runnable{
                                         for (byte[] bytes : list) {
                                             String objString = serializer.deserialize(bytes);
                                             MatchSubmit ms = gson.fromJson(objString, MatchSubmit.class);
+                                            if (ms.getAc()==0) continue;//ac的数据已经在数据库中，不需要再次添加
                                             msList.add(ms);
                                         }
                                         dao.saveList(msList);

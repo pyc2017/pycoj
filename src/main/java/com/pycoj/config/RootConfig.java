@@ -1,5 +1,6 @@
 package com.pycoj.config;
 
+import com.google.gson.Gson;
 import com.pycoj.service.EmailHandler;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.spring.ActiveMQConnectionFactory;
@@ -40,6 +41,11 @@ public class RootConfig {
      * 使用MimeMessageHelper配置MIME消息对象的属性
      * 使用MailSender对象发送message
      * */
+    @Bean
+    public Gson gson(){
+        return new Gson();
+    }
+
     @Bean
     public JavaMailSenderImpl mailSender(){
         JavaMailSenderImpl sender=new JavaMailSenderImpl();

@@ -7,7 +7,6 @@ import com.pycoj.dao.*;
 import com.pycoj.entity.*;
 import com.pycoj.entity.program.Program;
 import com.pycoj.util.MyUtil;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -29,8 +28,6 @@ import java.util.concurrent.ExecutorService;
  */
 @Service("sService")
 public class SolutionService implements DisposableBean{
-    private static final Logger log=Logger.getLogger(SolutionService.class);
-
     @Autowired private SubmitDao submitDao;
     @Autowired private MatchSubmitDao matchSubmitDao;
     @Autowired private MatchDao matchDao;
@@ -117,7 +114,6 @@ public class SolutionService implements DisposableBean{
         }
         if (!set.contains(new Match(matchId))){
             synchronized (set){
-                log.info("new match start,id:"+matchId);
                 Match newMatch=matchDao.selectMatchById(matchId);
                 set.add(newMatch);
                 //唤醒轮询的线程
@@ -180,7 +176,6 @@ public class SolutionService implements DisposableBean{
 
     @Override
     public void destroy() throws Exception {
-        log.info("SolutionService FixedThreadPool shutdown...");
         fixedPool.shutdownNow();
     }
 }

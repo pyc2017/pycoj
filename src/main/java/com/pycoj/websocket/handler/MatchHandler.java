@@ -36,7 +36,6 @@ public class MatchHandler implements WebSocketHandler{
         }
         Integer coder= (Integer) session.getAttributes().get("coder");
         id2SessionMap.put(coder,session);
-        log.info("open:"+matchId);
     }
 
     @Override
@@ -57,7 +56,6 @@ public class MatchHandler implements WebSocketHandler{
      */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-        log.info("close match id:"+matchId);
         Map id2SessionMap=map.get(matchId);
         Integer coder= (Integer) session.getAttributes().get("coder");
         id2SessionMap.remove(coder);
