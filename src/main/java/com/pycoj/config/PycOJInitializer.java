@@ -1,6 +1,8 @@
 package com.pycoj.config;
 
+import com.pycoj.http.SessionFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
@@ -26,6 +28,6 @@ public class PycOJInitializer extends AbstractAnnotationConfigDispatcherServletI
         CharacterEncodingFilter characterEncodingFilter=new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("utf-8");
         characterEncodingFilter.setForceEncoding(true);
-        return new Filter[]{characterEncodingFilter};
+        return new Filter[]{characterEncodingFilter,new SessionFilter()};
     }
 }

@@ -93,6 +93,11 @@ public class PersistanceConfig {
         return new File(properties().getProperty("matchQuestion"));
     }
 
+    @Bean("commentPic")
+    public File commentPic(){
+        return new File(properties().getProperty("commentPic"));
+    }
+
     @Bean("javaRunningFile")
     public File javaRunningFile() throws FileNotFoundException {
         return new File(program(),"Main1.java");

@@ -196,3 +196,9 @@ footer > div{
         transform: translateX(0%);
     }
 }
+#uploadModal img{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100px;
+    height:100px;
+}

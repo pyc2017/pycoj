@@ -34,7 +34,7 @@ public class MatchController {
     public Dto<Match> match(@RequestParam("matchId")int id,
                             @RequestParam("matchPassword")String password,
                             HttpSession session){
-        Coder coder= (Coder) session.getAttribute("coder");
+        Coder coder= MyUtil.getCurrentCoder(session);
         if (coder==null){
             return new Dto<>(null,false,"access denied");
         }
@@ -64,7 +64,7 @@ public class MatchController {
                                @RequestParam("endTime")long endTime,
                                @RequestParam("matchName")String name,
                                HttpSession session){
-        Coder coder= (Coder) session.getAttribute("coder");
+        Coder coder= MyUtil.getCurrentCoder(session);
         if (coder==null){
             return new Dto<>(null,false,"access denied");
         }
@@ -87,7 +87,11 @@ public class MatchController {
     @RequestMapping(value = "/match/index",method = RequestMethod.GET)
     public String match(@RequestParam("match") int id,
                         HttpSession session){
-        Integer current= (Integer) session.getAttribute("currentMatch");
+        byte[] bytes= (byte[]) session.getAttribute("currentMatch");
+        if (bytes==null||bytes.length==0){
+            return "match_entry";
+        }
+        Integer current=Integer.valueOf(new String(bytes));
         if (current==null||current!=id){
             return "match_entry";
         }
@@ -104,7 +108,7 @@ public class MatchController {
     @ResponseBody
     public boolean checkCreator(HttpSession session,
                                 @RequestParam("id")int id){
-        Coder coder= (Coder) session.getAttribute("coder");
+        Coder coder= MyUtil.getCurrentCoder(session);
         if (coder==null){
             return false;
         }
@@ -112,7 +116,7 @@ public class MatchController {
     }
 
     @RequestMapping(value = "/match/exit",method = RequestMethod.GET)
-    public String exitMatcth(HttpSession session){
+    public String exitMatch(HttpSession session){
         session.removeAttribute("currentMatch");
         return "redirect:/index/";
     }

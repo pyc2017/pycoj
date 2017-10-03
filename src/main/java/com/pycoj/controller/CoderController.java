@@ -3,6 +3,7 @@ package com.pycoj.controller;
 import com.pycoj.entity.Coder;
 import com.pycoj.service.EmailService;
 import com.pycoj.service.CoderService;
+import com.pycoj.util.MyUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -87,10 +88,9 @@ public class CoderController {
     @ResponseBody
     public String doRegister(
             Coder coder,
-            HttpServletRequest request){
+            HttpSession session){
         if (service.register(coder)){
             //成功并设置session
-            HttpSession session=request.getSession();
             session.setAttribute("coder", coder);
             return "success";
         }else{
@@ -115,8 +115,7 @@ public class CoderController {
     @ResponseBody
     public String doLogin(
             Coder coder,
-            HttpServletRequest request){
-        HttpSession session=request.getSession();
+            HttpSession session){
         if (service.login(coder)){
             session.setAttribute("coder", coder);
             return "success";
@@ -128,7 +127,7 @@ public class CoderController {
     @RequestMapping(value="/getUserInfo",method = RequestMethod.GET)
     @ResponseBody
     public void getUserInfo(HttpSession session,HttpServletResponse response){
-        Coder coder=(Coder)session.getAttribute("coder");
+        Coder coder= MyUtil.getCurrentCoder(session);
         PrintWriter out=null;
         response.setContentType("application/json;charset=UTF-8");
         try {
@@ -147,7 +146,7 @@ public class CoderController {
 
     @RequestMapping(value = "/uploadHeadImage",method = RequestMethod.GET)
     public String uploadHeadImage(HttpSession session){
-        if (session.getAttribute("coder")==null){
+        if (MyUtil.getCurrentCoder(session)==null){
             return "login";
         }else{
             return "head_image_upload";
@@ -162,7 +161,7 @@ public class CoderController {
     @RequestMapping(value = "/uploadHeadImage",method = RequestMethod.POST)
     public String uploadHeadImage(@RequestPart("headImage")MultipartFile image,
                                    HttpSession session){
-        Coder coder=(Coder) session.getAttribute("coder");
+        Coder coder=MyUtil.getCurrentCoder(session);
         if (headImageDir==null){
             headImageDir=session.getServletContext().getRealPath("/")+"resources/img/head/";
         }

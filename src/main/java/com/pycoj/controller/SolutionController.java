@@ -5,6 +5,7 @@ import com.pycoj.entity.Dto;
 import com.pycoj.entity.State;
 import com.pycoj.service.SolutionService;
 import com.pycoj.entity.program.Program;
+import com.pycoj.util.MyUtil;
 import com.pycoj.websocket.handler.SolutionHandler;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.WebSocketSession;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 
@@ -46,7 +48,7 @@ public class SolutionController {
                                    @RequestParam("lang")int lang,
                                    @PathVariable int id,
                                    HttpSession session) throws Exception {
-        Coder coder=(Coder) session.getAttribute("coder");
+        Coder coder= MyUtil.getCurrentCoder(session);
         if (coder==null){//需要重新返回
             return false;
         }
@@ -78,7 +80,8 @@ public class SolutionController {
     @RequestMapping(value = "/submit/ask/{id}",method = RequestMethod.GET)
     @ResponseBody public State[] coderQueryForTheLastSubmit(@PathVariable int id,
                                                             HttpSession session){
-        Coder coder= (Coder) session.getAttribute("coder");
+        Coder coder= MyUtil.getCurrentCoder(session);
+        log.info(coder.getId());
         return service.getStates(id,coder.getId());
     }
 
@@ -99,11 +102,17 @@ public class SolutionController {
                                  @PathVariable int matchId,
                                  @PathVariable int questionId,
                                  HttpSession session) throws Exception {
-        Coder coder=(Coder) session.getAttribute("coder");
+        Coder coder= MyUtil.getCurrentCoder(session);
         if (coder==null){//需要重新返回
             return new Dto<>(null,false,"access denied");
         }
-        Integer currentMatchId= (Integer) session.getAttribute("currentMatch");
+        byte[] bytes= (byte[]) session.getAttribute("currentMatch");
+        Integer currentMatchId;
+        if (bytes==null||bytes.length==0){
+            currentMatchId=null;
+        }else{
+            currentMatchId=Integer.valueOf(new String(bytes));
+        }
         /**
          * 对比赛、题目进行验证，防止没有比赛权限也可以提交代码，同时对验证此次提交之前是否已经ac，若已ac，则拒绝
          */
@@ -134,15 +143,13 @@ public class SolutionController {
      * @param code 提交代码
      * @param lang 语言类型
      * @param id 题目id
-     * @param session
      * @return
      * @throws Exception
      */
     @RequestMapping(value="/test/{id}",method = RequestMethod.POST)
     @ResponseBody public boolean test(@RequestParam("code")String code,
                                                    @RequestParam("lang")int lang,
-                                                   @PathVariable int id,
-                                                   HttpSession session) throws Exception {
+                                                   @PathVariable int id) throws Exception {
         /*存储文件*/
         String fileName = service.saveSolution(filePrefix, id, code, programs[lang]);
         /*运行文件*/

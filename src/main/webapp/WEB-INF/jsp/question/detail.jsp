@@ -5,11 +5,14 @@
     <script src="<%=path%>/resources/js/jquery-2.0.0.min.js"></script>
     <link href="<%=path%>/resources/css/loading.css" rel="stylesheet" type="text/css">
     <jsp:include page="../boostrap.jsp"></jsp:include>
+    <link type="text/css" rel="stylesheet" href="/resources/css/fileinput.min.css">
     <link href="<%=path%>/resources/css/index.css" rel="stylesheet" type="text/css">
     <link href="<%=path%>/resources/css/detailcomment.css" rel="stylesheet" type="text/css">
     <script src="<%=path%>/resources/js/marked.min.js"></script>
     <script src="<%=path%>/resources/js/detail.js"></script>
     <script src="<%=path%>/resources/js/index.js"></script>
+    <script src="/resources/js/fileinput.min.js"></script>
+    <script src="/resources/js/fileinput_locale_zh.js"></script>
     <title>${question.title}</title>
 </head>
 <body>
@@ -61,6 +64,7 @@
                                 <li><a href="javascript:void(0)" title="Add a numbered list" class="js-decoreate" id="AddNum">1.</a></li>
                                 <li><a href="javascript:void(0)" title="Add a link" class="js-decoreate" id="AddURL">URL</a></li>
                                 <li><a href="javascript:void(0)" title="Add a tast list" class="js-decoreate" id="AddTa"><span class="glyphicon glyphicon-ok"></span></a></li>
+                                <li><a data-target="#uploadModal" data-toggle="modal"><span class="glyphicon glyphicon-picture"></span></a></li>
                             </ul>
                         </div>
                         <div id="comment-box-content">
@@ -103,6 +107,36 @@
                     <button type="submit" class="btn submit" id="submit" onclick="submit(${question.id})">Submit</button>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="uploadModalLabel">上传图片</h4>
+                </div>
+                <div class="modal-body">
+                    <label for="pic">Picture</label>
+                    <input type="file" id="pic" name="pic" class="projectfile">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn submit" id="upload" onclick="upload()">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="uploadWaiting" tabindex="-1" role="dialog" aria-labelledby="uploadWaitingLabel">
+        <div class="load-3" style="margin-top:25%;margin-left: 42%;">
+                <div class="k-line2 k-line12-1"></div>
+                <div class="k-line2 k-line12-2"></div>
+                <div class="k-line2 k-line12-3"></div>
+                <div class="k-line2 k-line12-4"></div>
+                <div class="k-line2 k-line12-5"></div>
+                <div class="k-line2 k-line12-6"></div>
+                <div class="k-line2 k-line12-7"></div>
+                <div class="k-line2 k-line12-8"></div>
         </div>
     </div>
 </body>

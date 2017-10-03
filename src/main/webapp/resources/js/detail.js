@@ -4,6 +4,29 @@ $(document).ready(function () {
     getComment(window.location.pathname.substring(17));
     $("#question-submit-button input[type='image']").click(function () {/*开启模态框*/$('.modal').css('visibility','visible');$(".modal-data").css("visibility","visible");});
     $(".modal-close button").click(function(){$(".modal").css("visibility","hidden");$(".modal-data").css("visibility","hidden");});
+    var projectfileoptions = {
+        showUpload : false,
+        showRemove : false,
+        language : 'zh',
+        allowedPreviewTypes : [ 'image' ],
+        allowedFileExtensions : [ 'png','jpg','jpeg','bmp'],
+        maxFileSize : 2000
+    };
+    // 文件上传框
+    $('input[class="projectfile"]').each(function() {
+        var imageurl = $(this).attr("value");
+
+        if (imageurl) {
+            var op = $.extend({
+                initialPreview : [ // 预览图片的设置
+                    "<img src='" + imageurl + "' class='file-preview-image'>", ]
+            }, projectfileoptions);
+
+            $(this).fileinput(op);
+        } else {
+            $(this).fileinput(projectfileoptions);
+        }
+    });
     $(textarea).blur(function(){start=textarea.selectionStart;end=textarea.selectionEnd;});
     $("#AddHeader").click(function(){renderTheTextArea(textarea,start,end,"# ","");});
     $("#AddIta").click(function(){renderTheTextArea(textarea,start,end,'_','_');});
@@ -23,7 +46,7 @@ var comment=function(id){
         url:'/comment/'+id,
         type:'post',
         data:{
-            'content':marked(textarea.value)
+            'content':textarea.value
         },
         success:function(data){
             if(data.success===false&&data.info==='access denied'){
@@ -47,7 +70,7 @@ var getComment=function(id){
                     a[i].coder.nickname+
                     '</span><span> comment on '+new Date(a[i].createTime).toGMTString()+
                     '</span></div><div class="comment-content">'+
-                    a[i]["content"]+'</div></div></div>';
+                    marked(a[i]['content'])+'</div></div></div>';
                 $('#comment-box').before(s);
             }
         }
@@ -156,10 +179,26 @@ var NormalSolutionWS=function (id) {
         count++;
     };
     this._ws.onerror=function (e) {
-        console.log('error');
         window.location='/login/?original=/question_detail/'+id;
     }
     this._ws.onclose=function () {
         console.log('close');
     }
 };
+var upload=function () {
+    $('#uploadModal').modal('hide');
+    $('#uploadWaiting').modal();
+    var start=textarea.selectionStart;
+    var pic=new FormData(),req=new XMLHttpRequest();
+    pic.append('pic',document.getElementById("pic").files[0]);
+    req.open('post','/comment/pic',true);
+    req.onload=function () {
+        if (req.status==200){
+            $('#uploadWaiting').modal('hide');
+            var oldString=textarea.value;
+            var data=JSON.parse(req.responseText);
+            textarea.value=oldString.substring(0,start)+'![]('+data['data']+')'+oldString.substring(start,oldString.length);
+        }
+    };
+    req.send(pic);
+}

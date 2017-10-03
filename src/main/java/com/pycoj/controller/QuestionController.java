@@ -3,6 +3,7 @@ package com.pycoj.controller;
 import com.pycoj.entity.*;
 import com.pycoj.service.MatchService;
 import com.pycoj.service.QuestionService;
+import com.pycoj.util.MyUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -96,7 +97,7 @@ public class QuestionController {
     public String newMatchQuestion(MatchQuestion _q,
                                    @RequestParam("zip")MultipartFile zip,
                                    HttpSession session) throws IOException {
-        Coder coder=(Coder)session.getAttribute("coder");
+        Coder coder= MyUtil.getCurrentCoder(session);
         if (coder==null || !mService.checkCreator(_q.getMatchId(),coder.getId())){
             return "redirect:/login/";
         }
@@ -108,7 +109,9 @@ public class QuestionController {
     @ResponseBody
     public Dto<List<MatchQuestion>> getMatchQuestions(@RequestParam("m")int id,
                                                       HttpSession session){
-        Integer current= (Integer) session.getAttribute("currentMatch");
+        byte[] bytes= (byte[]) session.getAttribute("currentMatch");
+        if (bytes==null||bytes.length==0) return new Dto(null,false,"access denied");
+        Integer current=Integer.valueOf(new String(bytes));
         if (current==null||current!=id){
             return new Dto(null,false,"access denied");
         }else{

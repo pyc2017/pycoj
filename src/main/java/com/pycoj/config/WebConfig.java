@@ -12,10 +12,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -30,6 +27,7 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @EnableWebSocket
+
 @ComponentScan(basePackages = {"com.pycoj.controller"})
 public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer{
     /**
@@ -59,6 +57,15 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfi
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer){
         configurer.enable();
+    }
+
+    /**
+     * 对部分静态资源进行映射，可以使得存储的静态资源不一定在应用根目录下
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/pic/**").addResourceLocations("file:F:/pic/");
     }
 
     /**

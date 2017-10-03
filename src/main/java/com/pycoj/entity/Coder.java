@@ -78,8 +78,8 @@ public class Coder {
     public String toString(){
         return "{\"nickname\":\""+nickname+
                 "\",\"headImage\":\""+headImage+
-                "\",\"id\":\""+id+
-                "\",\"ac\":\""+acAmount+
-                "\"}";
+                "\",\"id\":"+id+
+                ",\"ac\":"+acAmount+
+                "}";
     }
 }

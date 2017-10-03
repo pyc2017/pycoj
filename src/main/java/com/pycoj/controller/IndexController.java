@@ -35,10 +35,11 @@ public class IndexController {
 
     @RequestMapping(value = "/match",method = RequestMethod.GET)
     public String match(HttpSession session){
-        Integer id= (Integer) session.getAttribute("currentMatch");
-        if (id==null) {
+        byte[] bytes= (byte[]) session.getAttribute("currentMatch");
+        if (bytes==null||bytes.length==0) {
             return "match_entry";
         }else{
+            Integer id=Integer.valueOf(new String(bytes));
             return "redirect:/match/index?match="+id;
         }
     }
